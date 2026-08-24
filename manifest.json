@@ -1,0 +1,10 @@
+{
+    "name": "Calculateur d'Expédition",
+    "short_name": "Calculateur",
+    "description": "Calculateur de frais d'expédition par avion et maritime",
+    "start_url": "./index.html",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#1b5e20",
+    "orientation": "portrait"
+}

@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+    <link rel="manifest" href="manifest.json">
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Calculateur d'Expédition</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header class="entete-application">
+
+    <div class="logo-application">
+        📦
+    </div>
+
+    <div>
+        <h1>Calculateur d'Expédition</h1>
+
+        <p>
+            ✈️ Avion &nbsp; | &nbsp; 🚢 Maritime
+        </p>
+    </div>
+
+</header>
+
+    <div class="application">
+
+        <header>
+            <h1>📦 Calculateur d'Expédition</h1>
+            <p>Calcul des frais d'envoi</p>
+        </header>
+
+        <main>
+
+            <!-- MODE D'EXPÉDITION -->
+
+            <section class="bloc">
+
+                <h2>🚚 Mode d'expédition</h2>
+
+                <label for="transport">Choisir le transport :</label>
+
+                <div class="titre-transport">
+
+    <h2>🚚 Mode de transport</h2>
+
+    <p>
+        Choisissez votre mode d'expédition
+    </p>
+
+</div>
+
+                    <select id="transport">
+
+                    <option value="avion">✈️ Avion</option>
+
+                    <option value="maritime">🚢 Maritime</option>
+
+                </select>
+
+            </section>
+
+
+            <!-- TYPE DE MARCHANDISE -->
+
+            <section class="bloc">
+
+                <h2>📦 Marchandise</h2>
+
+                <label for="marchandise">Type de marchandise :</label>
+
+                <select id="marchandise">
+
+                    <option value="general">
+                        Marchandise générale
+                    </option>
+
+                    <option value="batterie">
+                        Marchandise avec batterie
+                    </option>
+
+                    <option value="poudre">
+                        Poudre / Liquide / Aimant
+                    </option>
+
+                </select>
+
+            </section>
+
+
+            <!-- SERVICE -->
+
+            <section class="bloc" id="bloc-service">
+
+                <h2>⚡ Service avion</h2>
+
+                <label for="service">Type de service :</label>
+
+                <select id="service">
+
+                    <option value="express">
+                        EXPRESS
+                    </option>
+
+                    <option value="normal">
+                        NORMAL
+                    </option>
+
+                </select>
+
+            </section>
+
+
+            <!-- DIMENSIONS -->
+
+            <section class="bloc">
+
+                <h2>📏 Dimensions du colis</h2>
+
+                <div class="champs">
+
+<!-- NOM DU PRODUIT -->
+
+<section class="bloc">
+
+    <h2>📦 Nom du produit</h2>
+
+    <label for="nom-produit">
+        Nom du produit
+    </label>
+
+    <input
+        type="text"
+        id="nom-produit"
+        placeholder="Exemple : Chaussure"
+    >
+
+</section>
+
+<!-- ==========================================
+     INFORMATIONS PRODUIT
+     ========================================== -->
+
+<section class="bloc" id="infos-produit">
+
+    <h2>🔎 INFORMATIONS PRODUIT</h2>
+
+<div class="recherche-produit">
+
+    <input
+        type="text"
+        id="recherche-produit"
+        placeholder="🔎 Collez un lien ou indiquez le produit"
+    >
+
+    <button
+        type="button"
+        id="btnRechercheProduit">
+        🔎 RECHERCHER
+    </button>
+
+<!-- AJOUTER UNE CAPTURE -->
+
+<label
+    for="capture-produit"
+    class="bouton-capture">
+    📷 AJOUTER UNE CAPTURE
+</label>
+
+<input
+    type="file"
+    id="capture-produit"
+    accept="image/*"
+    style="display: none;"
+>
+
+<!-- APERÇU DE LA CAPTURE -->
+
+<div id="apercu-capture"></div>
+
+<div id="etat-recherche-produit"></div>
+
+</div>
+
+<div class="resultat-recherche-produit">
+
+    <small id="source-produit">
+        🌐 Source : —
+    </small>
+
+    <small id="poids-recherche">
+        ⚖️ Poids réel trouvé : —
+    </small>
+
+    <small id="poids-facturable-recherche">
+        💰 Poids facturable : —
+    </small>
+
+</div>
+
+</section>
+
+                    <div>
+                        <label for="hauteur">Hauteur (cm)</label>
+                        <input type="number" id="hauteur" min="0">
+                    </div>
+
+                    <div>
+                        <label for="longueur">Longueur (cm)</label>
+                        <input type="number" id="longueur" min="0">
+                    </div>
+
+                    <div>
+                        <label for="largeur">Largeur (cm)</label>
+                        <input type="number" id="largeur" min="0">
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- POIDS -->
+
+            <section class="bloc" id="bloc-poids">
+
+                <h2>⚖️ Poids</h2>
+
+                <label for="poids">Poids réel (kg)</label>
+
+                <input
+                    type="number"
+                    id="poids"
+                    min="0"
+                    step="0.01"
+                    placeholder="Exemple : 8"
+                >
+
+            </section>
+
+
+            <!-- PRIX MARCHANDISE -->
+
+            <section class="bloc">
+
+    <h2>💴 Prix de la marchandise</h2>
+
+    <label for="prix-yuan">
+        Prix d'achat en Yuan
+    </label>
+
+    <input
+        type="number"
+        id="prix-yuan"
+        min="0"
+        step="0.01"
+        placeholder="Exemple : 500"
+    >
+
+</section>
+
+
+<section class="bloc" id="bloc-taux">
+
+    <h2>💱 Taux de change</h2>
+
+    <label for="taux-yuan">
+        1 Yuan = combien de AR ?
+    </label>
+
+    <input
+        type="number"
+        id="taux-yuan"
+        min="0"
+        step="0.01"
+        value="670"
+    >
+
+    <div id="zone-taux-dollar">
+
+    <label for="taux-dollar">
+        1 Dollar = combien de AR ?
+    </label>
+
+    <input
+        type="number"
+        id="taux-dollar"
+        min="0"
+        step="0.01"
+        placeholder="Exemple : 4500"
+    >
+
+</div>
+
+</section>
+
+
+            <!-- BOUTON -->
+
+            <section class="bloc bouton-zone">
+
+               <button id="calculer">
+                    🧮 CALCULER
+                </button>
+
+               <button
+                   type="button"
+                   id="btnDevis"
+                   onclick="ajouterDevis()">
+                   📄 AJOUTER AU DEVIS
+              </button>
+
+              <button
+                  type="button"
+                  id="btnReset"
+                 onclick="reinitialiser()">
+                    🔄 RÉINITIALISER
+              </button>
+
+            <!-- RÉSULTAT -->
+
+            <section class="resultat">
+
+                <h2>📊 Résultat</h2>
+
+                <div id="resultats">
+
+                    <p>
+                        Remplissez les informations puis cliquez sur
+                        <strong>CALCULER</strong>.
+                    </p>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+    <script src="script.js"></script>
+
+    <script>
+    if ("serviceWorker" in navigator) {
+
+    window.addEventListener("load", function() {
+
+        navigator.serviceWorker.register(
+            "service-worker.js"
+        );
+
+    });
+
+}
+</script>
+
+<!-- ==========================================
+     BLOC-NOTES DES DEVIS
+     ========================================== -->
+
+<!-- ==========================================
+     BOUTON AFFICHER / MASQUER LES DEVIS
+     ========================================== -->
+
+<button
+    type="button"
+    id="btnAfficherDevis"
+    class="bouton-devis"
+    onclick="afficherMasquerDevis()">
+    📄 DEVIS
+</button>
+
+<section class="bloc" id="bloc-devis">
+
+    <h2>📄 DEVIS</h2>
+
+    <div
+        id="liste-devis"
+        class="bloc-notes-devis">
+    </div>
+
+<button
+    type="button"
+    id="btnEffacerDevis"
+    onclick="effacerDevis()">
+    🗑️ EFFACER LES DEVIS
+</button>
+
+<button
+    type="button"
+    id="btnCopierDevis"
+    onclick="copierDevis()">
+    📋 COPIER LES DEVIS
+</button>
+
+<button
+    type="button"
+    id="btnImprimerDevis"
+    onclick="imprimerDevis()">
+    🖨️ IMPRIMER LES DEVIS
+</button>
+
+</section>
+
+</body>
+
+</html>
