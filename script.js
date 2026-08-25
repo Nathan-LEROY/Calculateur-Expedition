@@ -1273,8 +1273,15 @@ if (btnRechercheProduit) {
         const rechercheProduit = document.getElementById("recherche-produit");
         const sourceProduit = document.getElementById("source-produit");
         const poidsRecherche = document.getElementById("poids-recherche");
-        const etatRechercheProduit = document.getElementById("etat-recherche-produit");
-        const poidsFacturableRecherche = document.getElementById("poids-facturable-recherche");
+
+const dimensionsRecherche =
+    document.getElementById("dimensions-recherche");
+
+const etatRechercheProduit =
+    document.getElementById("etat-recherche-produit");
+
+const poidsFacturableRecherche =
+    document.getElementById("poids-facturable-recherche");
 
         const texteRecherche = rechercheProduit.value.trim();
 
@@ -1282,6 +1289,8 @@ if (btnRechercheProduit) {
 
             sourceProduit.textContent = "🌐 Source : Aucune recherche";
             poidsRecherche.textContent = "⚖️ Poids réel trouvé : Non disponible";
+            dimensionsRecherche.textContent =
+    "📏 Dimensions trouvées : Non disponibles";
             poidsFacturableRecherche.textContent = "💰 Poids facturable : Non calculable";
 
 etatRechercheProduit.textContent = "⚠️ Veuillez indiquer un produit ou un lien.";
