@@ -1368,11 +1368,9 @@ fetch(
         " kg";
 
 
-    etatRechercheProduit.textContent =
+        etatRechercheProduit.textContent =
         "✅ Recherche effectuée pour : " +
         texteRecherche;
-
-}
 
 } else {
 
