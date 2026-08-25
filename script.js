@@ -1289,12 +1289,75 @@ etatRechercheProduit.textContent = "⚠️ Veuillez indiquer un produit ou un li
             return;
         }
 
-        // Pour l'instant, nous affichons simplement
-        // ce qui a été recherché.
-        sourceProduit.textContent = "🌐 Recherche : " + texteRecherche;
-        poidsRecherche.textContent = "⚖️ Poids réel trouvé : En attente";
-        poidsFacturableRecherche.textContent = "💰 Poids facturable : En attente";
         etatRechercheProduit.textContent = "🔎 Recherche en cours...";
+
+fetch(
+    "https://calculateur-expedition-api.jjandrianarivony.workers.dev/?produit=" +
+    encodeURIComponent(texteRecherche)
+)
+.then(function (response) {
+
+    if (!response.ok) {
+        throw new Error("Erreur HTTP " + response.status);
+    }
+
+    return response.json();
+})
+.then(function (donnees) {
+
+    if (!donnees.succes) {
+        throw new Error(
+            donnees.message || "Erreur lors de la recherche"
+        );
+    }
+
+    sourceProduit.textContent =
+        "🌐 Source : " +
+        (donnees.source || "Non disponible");
+
+    if (donnees.poids_reel !== null) {
+
+        poidsRecherche.textContent =
+            "⚖️ Poids réel trouvé : " +
+            donnees.poids_reel +
+            " kg";
+
+        poidsFacturableRecherche.textContent =
+            "💰 Poids facturable : Calcul en cours...";
+
+        etatRechercheProduit.textContent =
+            "✅ Produit trouvé : " +
+            texteRecherche;
+
+    } else {
+
+        poidsRecherche.textContent =
+            "⚖️ Poids réel trouvé : Non disponible";
+
+        poidsFacturableRecherche.textContent =
+            "💰 Poids facturable : Non calculable";
+
+        etatRechercheProduit.textContent =
+            "⚠️ Poids du produit introuvable.";
+    }
+
+})
+.catch(function (erreur) {
+
+    console.error("Erreur recherche produit :", erreur);
+
+    sourceProduit.textContent =
+        "🌐 Source : Erreur";
+
+    poidsRecherche.textContent =
+        "⚖️ Poids réel trouvé : Non disponible";
+
+    poidsFacturableRecherche.textContent =
+        "💰 Poids facturable : Non calculable";
+
+    etatRechercheProduit.textContent =
+        "❌ Impossible d'effectuer la recherche.";
+});
 
 fetch(
     "https://calculateur-expedition-api.jjandrianarivony.workers.dev/?produit=" +
