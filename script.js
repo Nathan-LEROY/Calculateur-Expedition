@@ -1296,5 +1296,28 @@ etatRechercheProduit.textContent = "⚠️ Veuillez indiquer un produit ou un li
         poidsFacturableRecherche.textContent = "💰 Poids facturable : En attente";
         etatRechercheProduit.textContent = "🔎 Recherche en cours...";
 
+fetch("https://calculateur-expedition-api.jjandrianarivony.workers.dev/")
+    .then(function (reponse) {
+
+        if (!reponse.ok) {
+            throw new Error("Erreur de connexion avec l'API");
+        }
+
+        return reponse.json();
+    })
+    .then(function (donnees) {
+
+        etatRechercheProduit.textContent =
+            "✅ " + donnees.message;
+
+    })
+    .catch(function (erreur) {
+
+        console.error(erreur);
+
+        etatRechercheProduit.textContent =
+            "❌ Impossible de contacter le service de recherche.";
+
+    });
     });
 }
