@@ -1317,19 +1317,45 @@ fetch(
 
     if (donnees.poids_reel !== null) {
 
-        poidsRecherche.textContent =
-            "⚖️ Poids réel trouvé : " +
-            donnees.poids_reel +
-            " kg";
+    // ==========================================
+    // POIDS RÉEL TROUVÉ PAR LA RECHERCHE
+    // ==========================================
 
-        poidsFacturableRecherche.textContent =
-            "💰 Poids facturable : Calcul en cours...";
+    const poidsTrouve =
+        parseFloat(donnees.poids_reel) || 0;
 
-        etatRechercheProduit.textContent =
-            "✅ Produit trouvé : " +
-            texteRecherche;
+    poidsRecherche.textContent =
+        "⚖️ Poids réel trouvé : " +
+        poidsTrouve.toFixed(3) +
+        " kg";
 
-    } else {
+
+    // ==========================================
+    // INJECTION DU POIDS DANS LE CALCULATEUR
+    // ==========================================
+
+    poids.value = poidsTrouve;
+
+
+    // ==========================================
+    // CALCUL DU POIDS FACTURABLE
+    // ==========================================
+
+    const poidsFacturable =
+        calculerPoidsFacturable();
+
+
+    poidsFacturableRecherche.textContent =
+        "💰 Poids facturable : " +
+        poidsFacturable.toFixed(3) +
+        " kg";
+
+
+    etatRechercheProduit.textContent =
+        "✅ Recherche effectuée pour : " +
+        texteRecherche;
+
+} else {
 
         poidsRecherche.textContent =
             "⚖️ Poids réel trouvé : Non disponible";
