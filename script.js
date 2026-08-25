@@ -1296,7 +1296,10 @@ etatRechercheProduit.textContent = "⚠️ Veuillez indiquer un produit ou un li
         poidsFacturableRecherche.textContent = "💰 Poids facturable : En attente";
         etatRechercheProduit.textContent = "🔎 Recherche en cours...";
 
-fetch("https://calculateur-expedition-api.jjandrianarivony.workers.dev/")
+fetch(
+    "https://calculateur-expedition-api.jjandrianarivony.workers.dev/?produit=" +
+    encodeURIComponent(texteRecherche)
+)
     .then(function (reponse) {
 
         if (!reponse.ok) {
