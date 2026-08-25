@@ -1347,22 +1347,41 @@ fetch(
     // ==========================================
 
     if (
-        donnees.dimensions &&
-        donnees.dimensions.hauteur_cm !== null &&
-        donnees.dimensions.longueur_cm !== null &&
-        donnees.dimensions.largeur_cm !== null
-    ) {
+    donnees.dimensions &&
+    donnees.dimensions.hauteur_cm !== null &&
+    donnees.dimensions.longueur_cm !== null &&
+    donnees.dimensions.largeur_cm !== null
+) {
 
-        hauteur.value =
-            donnees.dimensions.hauteur_cm;
+    const hauteurTrouvee =
+        parseFloat(donnees.dimensions.hauteur_cm);
 
-        longueur.value =
-            donnees.dimensions.longueur_cm;
+    const longueurTrouvee =
+        parseFloat(donnees.dimensions.longueur_cm);
 
-        largeur.value =
-            donnees.dimensions.largeur_cm;
-    }
+    const largeurTrouvee =
+        parseFloat(donnees.dimensions.largeur_cm);
 
+
+    // Affichage des dimensions trouvées
+    dimensionsRecherche.textContent =
+        "📏 Dimensions trouvées : " +
+        hauteurTrouvee.toFixed(2) + " × " +
+        longueurTrouvee.toFixed(2) + " × " +
+        largeurTrouvee.toFixed(2) +
+        " cm";
+
+
+    // Injection des dimensions dans le calculateur
+    hauteur.value = hauteurTrouvee;
+    longueur.value = longueurTrouvee;
+    largeur.value = largeurTrouvee;
+
+} else {
+
+    dimensionsRecherche.textContent =
+        "📏 Dimensions trouvées : Non disponibles";
+}
 
     // ==========================================
     // CALCUL DU POIDS FACTURABLE
