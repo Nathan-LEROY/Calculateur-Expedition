@@ -1329,12 +1329,30 @@ fetch(
         poidsTrouve.toFixed(3) +
         " kg";
 
-
-    // ==========================================
-    // INJECTION DU POIDS DANS LE CALCULATEUR
-    // ==========================================
-
+    // Injection du poids dans le calculateur
     poids.value = poidsTrouve;
+
+
+    // ==========================================
+    // DIMENSIONS TROUVÉES PAR LA RECHERCHE
+    // ==========================================
+
+    if (
+        donnees.dimensions &&
+        donnees.dimensions.hauteur_cm !== null &&
+        donnees.dimensions.longueur_cm !== null &&
+        donnees.dimensions.largeur_cm !== null
+    ) {
+
+        hauteur.value =
+            donnees.dimensions.hauteur_cm;
+
+        longueur.value =
+            donnees.dimensions.longueur_cm;
+
+        largeur.value =
+            donnees.dimensions.largeur_cm;
+    }
 
 
     // ==========================================
@@ -1343,7 +1361,6 @@ fetch(
 
     const poidsFacturable =
         calculerPoidsFacturable();
-
 
     poidsFacturableRecherche.textContent =
         "💰 Poids facturable : " +
@@ -1354,6 +1371,8 @@ fetch(
     etatRechercheProduit.textContent =
         "✅ Recherche effectuée pour : " +
         texteRecherche;
+
+}
 
 } else {
 
