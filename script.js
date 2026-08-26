@@ -111,44 +111,173 @@ function mettreAJourTransport() {
 }
 
 // ==========================================
-// CALCUL POIDS VOLUMÉTRIQUE AVION
+// CALCUL POIDS VOLUMÉTRIQUE DU COLIS
 // ==========================================
 
 function calculerPoidsVolumetrique() {
 
+    const typeEmballage =
+        document.getElementById("type-emballage");
+
+    // Dimensions du produit
     const H = parseFloat(hauteur.value) || 0;
-
     const L = parseFloat(longueur.value) || 0;
-
     const l = parseFloat(largeur.value) || 0;
 
-    return (H * L * l) / 6000;
+    // Si un emballage est sélectionné,
+    // utiliser les dimensions calculées de l'emballage
+    if (
+        typeEmballage &&
+        typeEmballage.value !== ""
+    ) {
 
+        const dimensionsEmballage =
+            calculerDimensionsEmballage();
+
+        if (dimensionsEmballage) {
+
+            return (
+                dimensionsEmballage.hauteur *
+                dimensionsEmballage.longueur *
+                dimensionsEmballage.largeur
+            ) / 6000;
+        }
+    }
+
+    // Sinon, utiliser les dimensions du produit
+    return (H * L * l) / 6000;
 }
 
-
 // ==========================================
-// CALCUL POIDS FACTURABLE
+// CALCUL POIDS FACTURABLE AVEC EMBALLAGE
 // ==========================================
 
 function calculerPoidsFacturable() {
 
-    const poidsReel =
+    const poidsProduit =
         parseFloat(poids.value) || 0;
+
+    let poidsEmballage = 0;
+
+    const typeEmballage =
+        document.getElementById("type-emballage");
+
+    if (
+        typeEmballage &&
+        typeEmballage.value !== ""
+    ) {
+
+        switch (typeEmballage.value) {
+
+            case "petit-sachet":
+                poidsEmballage = 0.010;
+                break;
+
+            case "sachet":
+                poidsEmballage = 0.020;
+                break;
+
+            case "enveloppe":
+                poidsEmballage = 0.030;
+                break;
+
+            case "petit-carton":
+                poidsEmballage = 0.050;
+                break;
+
+            case "carton":
+                poidsEmballage = 0.150;
+                break;
+
+            case "grand-carton":
+                poidsEmballage = 0.300;
+                break;
+        }
+    }
+
+    const poidsReelColis =
+        poidsProduit + poidsEmballage;
 
     const poidsVolumetrique =
         calculerPoidsVolumetrique();
 
     return Math.max(
-        poidsReel,
+        poidsReelColis,
         poidsVolumetrique
     );
-
 }
 
 // ==========================================
-// CALCUL AUTOMATIQUE DE L'EMBALLAGE
+// CALCUL DES DIMENSIONS DE L'EMBALLAGE
 // ==========================================
+
+function calculerDimensionsEmballage() {
+
+    const typeEmballage =
+        document.getElementById("type-emballage");
+
+    if (
+        !typeEmballage ||
+        typeEmballage.value === ""
+    ) {
+        return null;
+    }
+
+    const H =
+        parseFloat(hauteur.value) || 0;
+
+    const L =
+        parseFloat(longueur.value) || 0;
+
+    const l =
+        parseFloat(largeur.value) || 0;
+
+    if (H <= 0 || L <= 0 || l <= 0) {
+        return null;
+    }
+
+    let marge = 0;
+
+    switch (typeEmballage.value) {
+
+        case "petit-sachet":
+            marge = 1;
+            break;
+
+        case "sachet":
+            marge = 1.5;
+            break;
+
+        case "enveloppe":
+            marge = 2;
+            break;
+
+        case "petit-carton":
+            marge = 2;
+            break;
+
+        case "carton":
+            marge = 3;
+            break;
+
+        case "grand-carton":
+            marge = 5;
+            break;
+
+        default:
+            return null;
+    }
+
+    return {
+
+        hauteur: H + (marge * 2),
+
+        longueur: L + (marge * 2),
+
+        largeur: l + (marge * 2)
+
+    };
+}
 
 function calculerInformationsEmballage() {
 
@@ -1540,8 +1669,12 @@ fetch(
         " kg";
 
     // Injection du poids dans le calculateur
-    poids.value = poidsTrouve;
+    
+        // ==========================================
+// POIDS PRODUIT + EMBALLAGE
+// ==========================================
 
+poids.value = poidsTrouve;
 
     // ==========================================
     // DIMENSIONS TROUVÉES PAR LA RECHERCHE
