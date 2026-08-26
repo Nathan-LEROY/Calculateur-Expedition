@@ -1760,16 +1760,26 @@ if (
 // CHOIX DE L'EMBALLAGE
 // ==========================================
 
-let emballageFinal = typeEmballageAuto;
+// ==========================================
+// CHOIX DE L'EMBALLAGE
+// ==========================================
 
-if (
-    choixEmballage &&
-    choixEmballage.value !== "auto"
-) {
+let emballageFinal =
+    choixEmballage
+        ? choixEmballage.value
+        : "auto";
+
+// Si Automatique est sélectionné,
+// utiliser l'emballage détecté
+if (emballageFinal === "auto") {
 
     emballageFinal =
-        choixEmballage.value;
+        typeEmballageAuto;
 }
+
+// Mémoriser le choix
+window.typeEmballageAuto =
+    emballageFinal;
 
 // Afficher l'emballage choisi
 calculerInformationsEmballage(
