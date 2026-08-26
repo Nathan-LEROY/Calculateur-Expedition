@@ -1003,6 +1003,57 @@ transport.addEventListener(
 
 mettreAJourTransport();
 
+
+// ==========================================
+// CHANGEMENT MANUEL DE L'EMBALLAGE
+// ==========================================
+
+if (choixEmballage) {
+
+    choixEmballage.addEventListener(
+        "change",
+        function () {
+
+            let emballageChoisi =
+                choixEmballage.value;
+
+            if (
+                emballageChoisi === "auto"
+            ) {
+
+                emballageChoisi =
+                    window.typeEmballageAuto || "carton";
+            }
+
+            calculerInformationsEmballage(
+                emballageChoisi
+            );
+
+            // Recalculer le poids facturable
+            const poidsFacturable =
+                calculerPoidsFacturable(
+                    emballageChoisi
+                );
+
+            const poidsFacturableRecherche =
+                document.getElementById(
+                    "poids-facturable-recherche"
+                );
+
+            if (poidsFacturableRecherche) {
+
+                poidsFacturableRecherche.textContent =
+                    "💰 Poids facturable : " +
+                    poidsFacturable.toFixed(3) +
+                    " kg";
+            }
+
+        }
+    );
+
+}
+
+
 function reinitialiser() {
 
 // Champs numériques
