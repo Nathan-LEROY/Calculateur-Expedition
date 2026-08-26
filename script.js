@@ -146,6 +146,207 @@ function calculerPoidsFacturable() {
 
 }
 
+// ==========================================
+// CALCUL AUTOMATIQUE DE L'EMBALLAGE
+// ==========================================
+
+function calculerInformationsEmballage() {
+
+    const typeEmballage =
+        document.getElementById("type-emballage");
+
+    const typeInfo =
+        document.getElementById("type-emballage-info");
+
+    const poidsInfo =
+        document.getElementById("poids-emballage-info");
+
+    const dimensionsInfo =
+        document.getElementById("dimensions-emballage-info");
+
+    const emballageInfo =
+        document.getElementById("emballage-recherche");
+
+    if (!typeEmballage) {
+        return;
+    }
+
+    const type = typeEmballage.value;
+
+    if (type === "") {
+
+        emballageInfo.textContent =
+            "📦 EMBALLAGE : —";
+
+        typeInfo.textContent =
+            "🏷️ Type : —";
+
+        poidsInfo.textContent =
+            "⚖️ Poids emballage : —";
+
+        dimensionsInfo.textContent =
+            "📏 Dimensions emballage : —";
+
+        return;
+    }
+
+    // Dimensions actuelles du produit
+    const H =
+        parseFloat(hauteur.value) || 0;
+
+    const L =
+        parseFloat(longueur.value) || 0;
+
+    const l =
+        parseFloat(largeur.value) || 0;
+
+    if (H <= 0 || L <= 0 || l <= 0) {
+
+        emballageInfo.textContent =
+            "📦 EMBALLAGE : —";
+
+        typeInfo.textContent =
+            "🏷️ Type : Dimensions du produit nécessaires";
+
+        poidsInfo.textContent =
+            "⚖️ Poids emballage : —";
+
+        dimensionsInfo.textContent =
+            "📏 Dimensions emballage : —";
+
+        return;
+    }
+
+    let marge = 0;
+    let poidsEmballage = 0;
+
+    // ==========================================
+    // MARGE SELON LE TYPE D'EMBALLAGE
+    // ==========================================
+
+    switch (type) {
+
+        case "petit-sachet":
+            marge = 1;
+            poidsEmballage = 0.010;
+            break;
+
+        case "sachet":
+            marge = 1.5;
+            poidsEmballage = 0.020;
+            break;
+
+        case "enveloppe":
+            marge = 2;
+            poidsEmballage = 0.030;
+            break;
+
+        case "petit-carton":
+            marge = 2;
+            poidsEmballage = 0.050;
+            break;
+
+        case "carton":
+            marge = 3;
+            poidsEmballage = 0.150;
+            break;
+
+        case "grand-carton":
+            marge = 5;
+            poidsEmballage = 0.300;
+            break;
+
+        default:
+            return;
+    }
+
+    // ==========================================
+    // DIMENSIONS DU COLIS
+    // ==========================================
+
+    const hauteurEmballage =
+        H + (marge * 2);
+
+    const longueurEmballage =
+        L + (marge * 2);
+
+    const largeurEmballage =
+        l + (marge * 2);
+
+    // ==========================================
+    // AFFICHAGE
+    // ==========================================
+
+    let nomEmballage = "";
+
+    switch (type) {
+
+        case "petit-sachet":
+            nomEmballage = "Petit sachet";
+            break;
+
+        case "sachet":
+            nomEmballage = "Sachet";
+            break;
+
+        case "enveloppe":
+            nomEmballage = "Enveloppe";
+            break;
+
+        case "petit-carton":
+            nomEmballage = "Petit carton";
+            break;
+
+        case "carton":
+            nomEmballage = "Carton";
+            break;
+
+        case "grand-carton":
+            nomEmballage = "Grand carton";
+            break;
+    }
+
+    emballageInfo.textContent =
+        "📦 EMBALLAGE : " +
+        nomEmballage;
+
+    typeInfo.textContent =
+        "🏷️ Type : " +
+        nomEmballage;
+
+    poidsInfo.textContent =
+        "⚖️ Poids emballage : " +
+        poidsEmballage.toFixed(3) +
+        " kg";
+
+    dimensionsInfo.textContent =
+        "📏 Dimensions emballage : " +
+        longueurEmballage.toFixed(2) +
+        " × " +
+        largeurEmballage.toFixed(2) +
+        " × " +
+        hauteurEmballage.toFixed(2) +
+        " cm";
+}
+
+// ==========================================
+// CHANGEMENT DU TYPE D'EMBALLAGE
+// ==========================================
+
+const selectTypeEmballage =
+    document.getElementById("type-emballage");
+
+if (selectTypeEmballage) {
+
+    selectTypeEmballage.addEventListener(
+        "change",
+        function () {
+
+            calculerInformationsEmballage();
+
+        }
+    );
+}
 
 // ==========================================
 // CALCUL VOLUME MARITIME
