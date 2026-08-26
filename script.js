@@ -114,131 +114,17 @@ function mettreAJourTransport() {
 // CALCUL POIDS VOLUMÉTRIQUE DU COLIS
 // ==========================================
 
-function calculerPoidsVolumetrique() {
-
-    const typeEmballage =
-        document.getElementById("type-emballage");
+function calculerPoidsVolumetrique(typeEmballage = "carton") {
 
     // Dimensions du produit
     const H = parseFloat(hauteur.value) || 0;
     const L = parseFloat(longueur.value) || 0;
     const l = parseFloat(largeur.value) || 0;
 
-    // Si un emballage est sélectionné,
-    // utiliser les dimensions calculées de l'emballage
-    if (
-        typeEmballage &&
-        typeEmballage.value !== ""
-    ) {
-
-        const dimensionsEmballage =
-            calculerDimensionsEmballage();
-
-        if (dimensionsEmballage) {
-
-            return (
-                dimensionsEmballage.hauteur *
-                dimensionsEmballage.longueur *
-                dimensionsEmballage.largeur
-            ) / 6000;
-        }
-    }
-
-    // Sinon, utiliser les dimensions du produit
-    return (H * L * l) / 6000;
-}
-
-// ==========================================
-// CALCUL POIDS FACTURABLE AVEC EMBALLAGE
-// ==========================================
-
-function calculerPoidsFacturable() {
-
-    const poidsProduit =
-        parseFloat(poids.value) || 0;
-
-    let poidsEmballage = 0;
-
-    const typeEmballage =
-        document.getElementById("type-emballage");
-
-    if (
-        typeEmballage &&
-        typeEmballage.value !== ""
-    ) {
-
-        switch (typeEmballage.value) {
-
-            case "petit-sachet":
-                poidsEmballage = 0.010;
-                break;
-
-            case "sachet":
-                poidsEmballage = 0.020;
-                break;
-
-            case "enveloppe":
-                poidsEmballage = 0.030;
-                break;
-
-            case "petit-carton":
-                poidsEmballage = 0.050;
-                break;
-
-            case "carton":
-                poidsEmballage = 0.150;
-                break;
-
-            case "grand-carton":
-                poidsEmballage = 0.300;
-                break;
-        }
-    }
-
-    const poidsReelColis =
-        poidsProduit + poidsEmballage;
-
-    const poidsVolumetrique =
-        calculerPoidsVolumetrique();
-
-    return Math.max(
-        poidsReelColis,
-        poidsVolumetrique
-    );
-}
-
-// ==========================================
-// CALCUL DES DIMENSIONS DE L'EMBALLAGE
-// ==========================================
-
-function calculerDimensionsEmballage() {
-
-    const typeEmballage =
-        document.getElementById("type-emballage");
-
-    if (
-        !typeEmballage ||
-        typeEmballage.value === ""
-    ) {
-        return null;
-    }
-
-    const H =
-        parseFloat(hauteur.value) || 0;
-
-    const L =
-        parseFloat(longueur.value) || 0;
-
-    const l =
-        parseFloat(largeur.value) || 0;
-
-    if (H <= 0 || L <= 0 || l <= 0) {
-        return null;
-    }
-
     let marge = 0;
 
-    switch (typeEmballage.value) {
+    // Marge selon l'emballage détecté automatiquement
+    switch (typeEmballage) {
 
         case "petit-sachet":
             marge = 1;
@@ -263,21 +149,78 @@ function calculerDimensionsEmballage() {
         case "grand-carton":
             marge = 5;
             break;
-
-        default:
-            return null;
     }
 
-   return {
+    // Dimensions extérieures du colis avec emballage
+    const hauteurColis = H + (marge * 2);
+    const longueurColis = L + (marge * 2);
+    const largeurColis = l + (marge * 2);
 
-    longueur: L + (marge * 2),
-
-    largeur: l + (marge * 2),
-
-    hauteur: H + (marge * 2)
-
-};
+    // Calcul du poids volumétrique
+    return (
+        hauteurColis *
+        longueurColis *
+        largeurColis
+    ) / 6000;
 }
+
+// ==========================================
+// CALCUL POIDS FACTURABLE AVEC EMBALLAGE
+// ==========================================
+
+function calculerPoidsFacturable(typeEmballage = "carton") {
+
+    const poidsProduit =
+        parseFloat(poids.value) || 0;
+
+    let poidsEmballage = 0;
+
+    // Poids selon l'emballage détecté automatiquement
+    switch (typeEmballage) {
+
+        case "petit-sachet":
+            poidsEmballage = 0.010;
+            break;
+
+        case "sachet":
+            poidsEmballage = 0.020;
+            break;
+
+        case "enveloppe":
+            poidsEmballage = 0.030;
+            break;
+
+        case "petit-carton":
+            poidsEmballage = 0.050;
+            break;
+
+        case "carton":
+            poidsEmballage = 0.150;
+            break;
+
+        case "grand-carton":
+            poidsEmballage = 0.300;
+            break;
+    }
+
+    // Poids réel total : produit + emballage
+    const poidsReelColis =
+        poidsProduit + poidsEmballage;
+
+    // Poids volumétrique
+    const poidsVolumetrique =
+    calculerPoidsVolumetrique(typeEmballage);
+
+    // Le poids facturable est le plus élevé des deux
+    return Math.max(
+        poidsReelColis,
+        poidsVolumetrique
+    );
+}
+
+// ==========================================
+// CALCUL DES DIMENSIONS DE L'EMBALLAGE
+// ==========================================
 
 function calculerInformationsEmballage(type) {
 
@@ -342,6 +285,7 @@ function calculerInformationsEmballage(type) {
 
     switch (type) {
 
+            
         case "petit-sachet":
             marge = 1;
             poidsEmballage = 0.010;
@@ -566,47 +510,47 @@ function calculerAvion(
 
 let poidsEmballage = 0;
 
-const typeEmballage =
-    document.getElementById("type-emballage");
+// ==========================================
+// EMBALLAGE AUTOMATIQUE
+// ==========================================
 
-if (
-    typeEmballage &&
-    typeEmballage.value !== ""
-) {
+const typeEmballageAuto =
+    window.typeEmballageAuto || "carton";
 
-    switch (typeEmballage.value) {
+let poidsEmballage = 0;
 
-        case "petit-sachet":
-            poidsEmballage = 0.010;
-            break;
+switch (typeEmballageAuto) {
 
-        case "sachet":
-            poidsEmballage = 0.020;
-            break;
+    case "petit-sachet":
+        poidsEmballage = 0.010;
+        break;
 
-        case "enveloppe":
-            poidsEmballage = 0.030;
-            break;
+    case "sachet":
+        poidsEmballage = 0.020;
+        break;
 
-        case "petit-carton":
-            poidsEmballage = 0.050;
-            break;
+    case "enveloppe":
+        poidsEmballage = 0.030;
+        break;
 
-        case "carton":
-            poidsEmballage = 0.150;
-            break;
+    case "petit-carton":
+        poidsEmballage = 0.050;
+        break;
 
-        case "grand-carton":
-            poidsEmballage = 0.300;
-            break;
-    }
+    case "carton":
+        poidsEmballage = 0.150;
+        break;
+
+    case "grand-carton":
+        poidsEmballage = 0.300;
+        break;
 }
 
 const poidsReel =
     poidsProduit + poidsEmballage;
 
 const poidsVolumetrique =
-    calculerPoidsVolumetrique();
+    calculerPoidsVolumetrique(typeEmballageAuto);
 
 const poidsFacturable =
     Math.max(
@@ -1657,7 +1601,7 @@ poids.value = poidsTrouve;
 // DÉTECTION AUTOMATIQUE DE L'EMBALLAGE
 // ==========================================
 
-let typeEmballageAuto = "carton";
+window.typeEmballageAuto = "carton";
 
 // Produit recherché
 const produitRecherche =
@@ -1677,7 +1621,7 @@ if (
     produitRecherche.includes("petit accessoire")
 ) {
 
-    typeEmballageAuto = "petit-sachet";
+    window.typeEmballageAuto = "petit-sachet";
 
 }
 
@@ -1689,7 +1633,7 @@ else if (
     produitRecherche.includes("photo")
 ) {
 
-    typeEmballageAuto = "enveloppe";
+    window.typeEmballageAuto = "enveloppe";
 
 }
 
@@ -1704,7 +1648,7 @@ else if (
     produitRecherche.includes("imprimante")
 ) {
 
-    typeEmballageAuto = "grand-carton";
+    window.typeEmballageAuto = "grand-carton";
 
 }
 
@@ -1718,22 +1662,14 @@ else if (
     produitRecherche.includes("ipad")
 ) {
 
-    typeEmballageAuto = "carton";
+    window.typeEmballageAuto = "carton";
 }
 
 // ==========================================
-// AFFICHER L'EMBALLAGE AUTOMATIQUE
+// DIMENSIONS TROUVÉES PAR LA RECHERCHE
 // ==========================================
 
-calculerInformationsEmballage(
-    typeEmballageAuto
-);
-        
-    // ==========================================
-    // DIMENSIONS TROUVÉES PAR LA RECHERCHE
-    // ==========================================
-
-    if (
+if (
     donnees.dimensions &&
     donnees.dimensions.hauteur_cm !== null &&
     donnees.dimensions.longueur_cm !== null &&
@@ -1764,18 +1700,27 @@ calculerInformationsEmballage(
     longueur.value = longueurTrouvee;
     largeur.value = largeurTrouvee;
 
+
+    // ==========================================
+    // AFFICHER L'EMBALLAGE AUTOMATIQUE
+    // ==========================================
+
+    calculerInformationsEmballage(
+        typeEmballageAuto
+    );
+
 } else {
 
     dimensionsRecherche.textContent =
         "📏 Dimensions trouvées : Non disponibles";
 }
-
+      
     // ==========================================
     // CALCUL DU POIDS FACTURABLE
     // ==========================================
 
-    const poidsFacturable =
-        calculerPoidsFacturable();
+   const poidsFacturable =
+    calculerPoidsFacturable(typeEmballageAuto);
 
     poidsFacturableRecherche.textContent =
         "💰 Poids facturable : " +
