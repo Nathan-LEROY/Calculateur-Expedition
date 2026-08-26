@@ -279,10 +279,7 @@ function calculerDimensionsEmballage() {
 };
 }
 
-function calculerInformationsEmballage() {
-
-    const typeEmballage =
-        document.getElementById("type-emballage");
+function calculerInformationsEmballage(type) {
 
     const typeInfo =
         document.getElementById("type-emballage-info");
@@ -296,13 +293,7 @@ function calculerInformationsEmballage() {
     const emballageInfo =
         document.getElementById("emballage-recherche");
 
-    if (!typeEmballage) {
-        return;
-    }
-
-    const type = typeEmballage.value;
-
-    if (type === "") {
+    if (!type) {
 
         emballageInfo.textContent =
             "📦 EMBALLAGE : —";
@@ -319,7 +310,6 @@ function calculerInformationsEmballage() {
         return;
     }
 
-    // Dimensions actuelles du produit
     const H =
         parseFloat(hauteur.value) || 0;
 
@@ -348,50 +338,49 @@ function calculerInformationsEmballage() {
 
     let marge = 0;
     let poidsEmballage = 0;
-
-    // ==========================================
-    // MARGE SELON LE TYPE D'EMBALLAGE
-    // ==========================================
+    let nomEmballage = "";
 
     switch (type) {
 
         case "petit-sachet":
             marge = 1;
             poidsEmballage = 0.010;
+            nomEmballage = "Petit sachet";
             break;
 
         case "sachet":
             marge = 1.5;
             poidsEmballage = 0.020;
+            nomEmballage = "Sachet";
             break;
 
         case "enveloppe":
             marge = 2;
             poidsEmballage = 0.030;
+            nomEmballage = "Enveloppe";
             break;
 
         case "petit-carton":
             marge = 2;
             poidsEmballage = 0.050;
+            nomEmballage = "Petit carton";
             break;
 
         case "carton":
             marge = 3;
             poidsEmballage = 0.150;
+            nomEmballage = "Carton";
             break;
 
         case "grand-carton":
             marge = 5;
             poidsEmballage = 0.300;
+            nomEmballage = "Grand carton";
             break;
 
         default:
             return;
     }
-
-    // ==========================================
-    // DIMENSIONS DU COLIS
-    // ==========================================
 
     const hauteurEmballage =
         H + (marge * 2);
@@ -401,39 +390,6 @@ function calculerInformationsEmballage() {
 
     const largeurEmballage =
         l + (marge * 2);
-
-    // ==========================================
-    // AFFICHAGE
-    // ==========================================
-
-    let nomEmballage = "";
-
-    switch (type) {
-
-        case "petit-sachet":
-            nomEmballage = "Petit sachet";
-            break;
-
-        case "sachet":
-            nomEmballage = "Sachet";
-            break;
-
-        case "enveloppe":
-            nomEmballage = "Enveloppe";
-            break;
-
-        case "petit-carton":
-            nomEmballage = "Petit carton";
-            break;
-
-        case "carton":
-            nomEmballage = "Carton";
-            break;
-
-        case "grand-carton":
-            nomEmballage = "Grand carton";
-            break;
-    }
 
     emballageInfo.textContent =
         "📦 EMBALLAGE : " +
@@ -450,11 +406,11 @@ function calculerInformationsEmballage() {
 
     dimensionsInfo.textContent =
         "📏 Dimensions emballage : " +
+        hauteurEmballage.toFixed(2) +
+        " × " +
         longueurEmballage.toFixed(2) +
         " × " +
         largeurEmballage.toFixed(2) +
-        " × " +
-        hauteurEmballage.toFixed(2) +
         " cm";
 }
 
