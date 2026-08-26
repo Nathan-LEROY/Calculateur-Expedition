@@ -415,25 +415,6 @@ function calculerInformationsEmballage(type) {
 }
 
 // ==========================================
-// CHANGEMENT DU TYPE D'EMBALLAGE
-// ==========================================
-
-const selectTypeEmballage =
-    document.getElementById("type-emballage");
-
-if (selectTypeEmballage) {
-
-    selectTypeEmballage.addEventListener(
-        "change",
-        function () {
-
-            calculerInformationsEmballage();
-
-        }
-    );
-}
-
-// ==========================================
 // CALCUL VOLUME MARITIME
 // ==========================================
 
@@ -1672,6 +1653,82 @@ fetch(
 
 poids.value = poidsTrouve;
 
+        // ==========================================
+// DÉTECTION AUTOMATIQUE DE L'EMBALLAGE
+// ==========================================
+
+let typeEmballageAuto = "carton";
+
+// Produit recherché
+const produitRecherche =
+    texteRecherche.toLowerCase();
+
+// Petits produits / accessoires
+if (
+    produitRecherche.includes("câble") ||
+    produitRecherche.includes("cable") ||
+    produitRecherche.includes("chargeur") ||
+    produitRecherche.includes("écouteur") ||
+    produitRecherche.includes("ecouteur") ||
+    produitRecherche.includes("coque") ||
+    produitRecherche.includes("étui") ||
+    produitRecherche.includes("etui") ||
+    produitRecherche.includes("adaptateur") ||
+    produitRecherche.includes("petit accessoire")
+) {
+
+    typeEmballageAuto = "petit-sachet";
+
+}
+
+// Produits plats ou fragiles
+else if (
+    produitRecherche.includes("document") ||
+    produitRecherche.includes("livre") ||
+    produitRecherche.includes("enveloppe") ||
+    produitRecherche.includes("photo")
+) {
+
+    typeEmballageAuto = "enveloppe";
+
+}
+
+// Produits volumineux
+else if (
+    produitRecherche.includes("ordinateur") ||
+    produitRecherche.includes("pc portable") ||
+    produitRecherche.includes("écran") ||
+    produitRecherche.includes("ecran") ||
+    produitRecherche.includes("télévision") ||
+    produitRecherche.includes("television") ||
+    produitRecherche.includes("imprimante")
+) {
+
+    typeEmballageAuto = "grand-carton";
+
+}
+
+// Smartphones et appareils électroniques
+else if (
+    produitRecherche.includes("iphone") ||
+    produitRecherche.includes("smartphone") ||
+    produitRecherche.includes("téléphone") ||
+    produitRecherche.includes("telephone") ||
+    produitRecherche.includes("tablette") ||
+    produitRecherche.includes("ipad")
+) {
+
+    typeEmballageAuto = "carton";
+}
+
+// ==========================================
+// AFFICHER L'EMBALLAGE AUTOMATIQUE
+// ==========================================
+
+calculerInformationsEmballage(
+    typeEmballageAuto
+);
+        
     // ==========================================
     // DIMENSIONS TROUVÉES PAR LA RECHERCHE
     // ==========================================
