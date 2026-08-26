@@ -77,6 +77,8 @@ const boutonCalculer = document.getElementById("calculer");
 
 const resultats = document.getElementById("resultats");
 
+const choixEmballage =
+    document.getElementById("choix-emballage");
 
 // ==========================================
 // AFFICHER / CACHER LES CHAMPS
@@ -1703,9 +1705,25 @@ if (
     // AFFICHER L'EMBALLAGE AUTOMATIQUE
     // ==========================================
 
-    calculerInformationsEmballage(
-        typeEmballageAuto
-    );
+    // ==========================================
+// CHOIX DE L'EMBALLAGE
+// ==========================================
+
+let emballageFinal = typeEmballageAuto;
+
+if (
+    choixEmballage &&
+    choixEmballage.value !== "auto"
+) {
+
+    emballageFinal =
+        choixEmballage.value;
+}
+
+// Afficher l'emballage choisi
+calculerInformationsEmballage(
+    emballageFinal
+);
 
 } else {
 
@@ -1718,7 +1736,7 @@ if (
     // ==========================================
 
    const poidsFacturable =
-    calculerPoidsFacturable(typeEmballageAuto);
+    calculerPoidsFacturable(emballageFinal);
 
     poidsFacturableRecherche.textContent =
         "💰 Poids facturable : " +
