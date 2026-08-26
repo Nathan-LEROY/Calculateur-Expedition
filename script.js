@@ -268,15 +268,15 @@ function calculerDimensionsEmballage() {
             return null;
     }
 
-    return {
+   return {
 
-        hauteur: H + (marge * 2),
+    longueur: L + (marge * 2),
 
-        longueur: L + (marge * 2),
+    largeur: l + (marge * 2),
 
-        largeur: l + (marge * 2)
+    hauteur: H + (marge * 2)
 
-    };
+};
 }
 
 function calculerInformationsEmballage() {
