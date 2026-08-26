@@ -624,18 +624,58 @@ function calculerAvion(
     montantMarchandiseAR
 ) {
 
+    const poidsProduit =
+    parseFloat(poids.value) || 0;
 
-    const poidsReel =
-        parseFloat(poids.value) || 0;
+let poidsEmballage = 0;
 
-    const poidsVolumetrique =
-        calculerPoidsVolumetrique();
+const typeEmballage =
+    document.getElementById("type-emballage");
 
-    const poidsFacturable =
-        Math.max(
-            poidsReel,
-            poidsVolumetrique
-        );
+if (
+    typeEmballage &&
+    typeEmballage.value !== ""
+) {
+
+    switch (typeEmballage.value) {
+
+        case "petit-sachet":
+            poidsEmballage = 0.010;
+            break;
+
+        case "sachet":
+            poidsEmballage = 0.020;
+            break;
+
+        case "enveloppe":
+            poidsEmballage = 0.030;
+            break;
+
+        case "petit-carton":
+            poidsEmballage = 0.050;
+            break;
+
+        case "carton":
+            poidsEmballage = 0.150;
+            break;
+
+        case "grand-carton":
+            poidsEmballage = 0.300;
+            break;
+    }
+}
+
+const poidsReel =
+    poidsProduit + poidsEmballage;
+
+const poidsVolumetrique =
+    calculerPoidsVolumetrique();
+
+const poidsFacturable =
+    Math.max(
+        poidsReel,
+        poidsVolumetrique
+    );
 
 
     let tarif = 0;
