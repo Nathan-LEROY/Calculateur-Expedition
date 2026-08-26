@@ -508,8 +508,6 @@ function calculerAvion(
     const poidsProduit =
     parseFloat(poids.value) || 0;
 
-let poidsEmballage = 0;
-
 // ==========================================
 // EMBALLAGE AUTOMATIQUE
 // ==========================================
