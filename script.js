@@ -1774,7 +1774,7 @@ let emballageFinal =
 if (emballageFinal === "auto") {
 
     emballageFinal =
-        typeEmballageAuto;
+        window.typeEmballageAuto;
 }
 
 // Mémoriser le choix
