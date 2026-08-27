@@ -1838,32 +1838,5 @@ calculerInformationsEmballage(
     etatRechercheProduit.textContent =
         "❌ Impossible d'effectuer la recherche.";
 });
-
-fetch(
-    "https://calculateur-expedition-api.jjandrianarivony.workers.dev/?produit=" +
-    encodeURIComponent(texteRecherche)
-)
-    .then(function (reponse) {
-
-        if (!reponse.ok) {
-            throw new Error("Erreur de connexion avec l'API");
-        }
-
-        return reponse.json();
-    })
-    .then(function (donnees) {
-
-        etatRechercheProduit.textContent =
-            "✅ " + donnees.message;
-
-    })
-    .catch(function (erreur) {
-
-        console.error(erreur);
-
-        etatRechercheProduit.textContent =
-            "❌ Impossible de contacter le service de recherche.";
-
-    });
     });
 }
