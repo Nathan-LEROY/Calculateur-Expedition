@@ -9,7 +9,6 @@
 
 const TAUX_YUAN_AR_DEFAUT = 670;
 
-
 // ==========================================
 // TARIFS AVION
 // ==========================================
@@ -1618,9 +1617,32 @@ etatRechercheProduit.textContent = "⚠️ Veuillez indiquer un produit ou un li
 
         etatRechercheProduit.textContent = "🔎 Recherche en cours...";
 
+// ==========================================
+// PRÉPARATION DE LA RECHERCHE
+// PRODUIT + POINTURE
+// ==========================================
+
+let rechercheAPI = texteRecherche;
+
+if (pointureRecherchee !== null) {
+
+    rechercheAPI =
+        texteRecherche
+            .replace(
+                /\b(2[4-9]|3[0-9]|4[0-3])\s*FR\b/i,
+                ""
+            )
+            .trim();
+
+}
+
+// ==========================================
+// RECHERCHE API
+// ==========================================
+
 fetch(
     "https://calculateur-expedition-api.jjandrianarivony.workers.dev/?produit=" +
-    encodeURIComponent(texteRecherche)
+    encodeURIComponent(rechercheAPI)
 )
 .then(function (response) {
 
