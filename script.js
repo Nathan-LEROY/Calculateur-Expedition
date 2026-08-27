@@ -1642,8 +1642,12 @@ if (pointureRecherchee !== null) {
 
 fetch(
     "https://calculateur-expedition-api.jjandrianarivony.workers.dev/?produit=" +
-    encodeURIComponent(rechercheAPI)
+    encodeURIComponent(rechercheAPI) +
+    (pointureRecherchee !== null
+        ? "&pointure=" + encodeURIComponent(pointureRecherchee + " FR")
+        : "")
 )
+    
 .then(function (response) {
 
     if (!response.ok) {
