@@ -2048,26 +2048,15 @@ fetch(urlAPI)
     poidsRecherche.textContent =
         "⚖️ Poids réel trouvé : Non disponible";
 
+    dimensionsRecherche.textContent =
+        "📏 Dimensions trouvées : Non disponibles";
+
     poidsFacturableRecherche.textContent =
         "💰 Poids facturable : Non calculable";
 
     etatRechercheProduit.textContent =
         "❌ Impossible d'effectuer la recherche.";
-});
 
-    console.error("Erreur recherche produit :", erreur);
-
-    sourceProduit.textContent =
-        "🌐 Source : Erreur";
-
-    poidsRecherche.textContent =
-        "⚖️ Poids réel trouvé : Non disponible";
-
-    poidsFacturableRecherche.textContent =
-        "💰 Poids facturable : Non calculable";
-
-        etatRechercheProduit.textContent =
-        "❌ Impossible d'effectuer la recherche.";
 });
     });
 }
