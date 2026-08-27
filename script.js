@@ -1638,211 +1638,390 @@ if (pointureRecherchee !== null) {
 
 // ==========================================
 // RECHERCHE API
+// PRODUIT + POINTURE
 // ==========================================
 
-fetch(
+let urlAPI =
     "https://calculateur-expedition-api.jjandrianarivony.workers.dev/?produit=" +
-    encodeURIComponent(rechercheAPI) +
-    (pointureRecherchee !== null
-        ? "&pointure=" + encodeURIComponent(pointureRecherchee + " FR")
-        : "")
-)
-    
+    encodeURIComponent(rechercheAPI);
+
+// Ajouter la pointure à la requête API
+if (pointureRecherchee !== null) {
+
+    urlAPI +=
+        "&pointure=" +
+        encodeURIComponent(
+            pointureRecherchee + " FR"
+        );
+}
+
+fetch(urlAPI)
+
 .then(function (response) {
 
     if (!response.ok) {
-        throw new Error("Erreur HTTP " + response.status);
+
+        throw new Error(
+            "Erreur HTTP " +
+            response.status
+        );
     }
 
     return response.json();
 })
+
 .then(function (donnees) {
 
     if (!donnees.succes) {
+
         throw new Error(
-            donnees.message || "Erreur lors de la recherche"
+            donnees.message ||
+            "Erreur lors de la recherche"
         );
     }
 
+    // ==========================================
+    // SOURCE
+    // ==========================================
+
     sourceProduit.textContent =
         "🌐 Source : " +
-        (donnees.source || "Non disponible");
+        (
+            donnees.source ||
+            "Non disponible"
+        );
 
-    if (donnees.poids_reel !== null) {
 
     // ==========================================
-    // POIDS RÉEL TROUVÉ PAR LA RECHERCHE
+    // PRODUIT RECHERCHÉ
     // ==========================================
 
-    const poidsTrouve =
-        parseFloat(donnees.poids_reel) || 0;
+    const produitRechercheAffiche =
+        document.getElementById(
+            "produit-recherche-info"
+        );
+
+    if (produitRechercheAffiche) {
+
+        produitRechercheAffiche.textContent =
+            "📦 Produit recherché : " +
+            (
+                donnees.produit ||
+                rechercheAPI
+            );
+    }
+
+
+    // ==========================================
+    // POINTURE DEMANDÉE
+    // ==========================================
+
+    const pointureDemandeeAffichee =
+        document.getElementById(
+            "pointure-demandee-info"
+        );
+
+    if (pointureDemandeeAffichee) {
+
+        pointureDemandeeAffichee.textContent =
+            "👟 Pointure demandée : " +
+            (
+                donnees.pointure ||
+                "—"
+            );
+    }
+
+
+    // ==========================================
+    // POINTURE CONFIRMÉE
+    // ==========================================
+
+    const pointureConfirmeeAffichee =
+        document.getElementById(
+            "pointure-confirmee-info"
+        );
+
+    if (pointureConfirmeeAffichee) {
+
+        pointureConfirmeeAffichee.textContent =
+            "🔎 Pointure confirmée : " +
+            (
+                donnees.pointure_confirmee ||
+                "—"
+            );
+    }
+
+
+    // ==========================================
+    // RÉFÉRENCE
+    // ==========================================
+
+    const referenceAffichee =
+        document.getElementById(
+            "reference-produit-info"
+        );
+
+    if (referenceAffichee) {
+
+        referenceAffichee.textContent =
+            "🔖 Référence : " +
+            (
+                donnees.reference ||
+                "—"
+            );
+    }
+
+
+    // ==========================================
+    // MODÈLE
+    // ==========================================
+
+    const modeleAffiche =
+        document.getElementById(
+            "modele-produit-info"
+        );
+
+    if (modeleAffiche) {
+
+        modeleAffiche.textContent =
+            "🏷️ Modèle : " +
+            (
+                donnees.modele ||
+                "—"
+            );
+    }
+
+
+    // ==========================================
+    // STATUT
+    // ==========================================
+
+    const statutAffiche =
+        document.getElementById(
+            "statut-produit-info"
+        );
+
+    if (statutAffiche) {
+
+        statutAffiche.textContent =
+            "ℹ️ Statut : " +
+            (
+                donnees.statut ||
+                "—"
+            );
+    }
+
+
+    // ==========================================
+    // POIDS RÉEL
+    // ==========================================
+
+    if (
+        donnees.poids_reel !== null &&
+        donnees.poids_reel !== undefined
+    ) {
+
+        const poidsTrouve =
+            parseFloat(
+                donnees.poids_reel
+            ) || 0;
+
+        poidsRecherche.textContent =
+            "⚖️ Poids réel trouvé : " +
+            poidsTrouve.toFixed(3) +
+            " kg";
+
+
+        // Injection dans le calculateur
+        poids.value =
+            poidsTrouve;
+
+
+        // ==========================================
+        // DÉTECTION AUTOMATIQUE EMBALLAGE
+        // ==========================================
+
+        window.typeEmballageAuto =
+            "carton";
+
+        const produitRecherche =
+            texteRecherche.toLowerCase();
+
+
+        if (
+            produitRecherche.includes("câble") ||
+            produitRecherche.includes("cable") ||
+            produitRecherche.includes("chargeur") ||
+            produitRecherche.includes("écouteur") ||
+            produitRecherche.includes("ecouteur") ||
+            produitRecherche.includes("coque") ||
+            produitRecherche.includes("étui") ||
+            produitRecherche.includes("etui") ||
+            produitRecherche.includes("adaptateur")
+        ) {
+
+            window.typeEmballageAuto =
+                "petit-sachet";
+
+        }
+
+        else if (
+            produitRecherche.includes("document") ||
+            produitRecherche.includes("livre") ||
+            produitRecherche.includes("enveloppe") ||
+            produitRecherche.includes("photo")
+        ) {
+
+            window.typeEmballageAuto =
+                "enveloppe";
+
+        }
+
+        else if (
+            produitRecherche.includes("ordinateur") ||
+            produitRecherche.includes("pc portable") ||
+            produitRecherche.includes("écran") ||
+            produitRecherche.includes("ecran") ||
+            produitRecherche.includes("télévision") ||
+            produitRecherche.includes("television") ||
+            produitRecherche.includes("imprimante")
+        ) {
+
+            window.typeEmballageAuto =
+                "grand-carton";
+
+        }
+
+        else if (
+            produitRecherche.includes("iphone") ||
+            produitRecherche.includes("smartphone") ||
+            produitRecherche.includes("téléphone") ||
+            produitRecherche.includes("telephone") ||
+            produitRecherche.includes("tablette") ||
+            produitRecherche.includes("ipad")
+        ) {
+
+            window.typeEmballageAuto =
+                "carton";
+        }
+
+
+        // ==========================================
+        // DIMENSIONS
+        // ==========================================
 
         let emballageFinal =
-    choixEmballage
-        ? choixEmballage.value
-        : "auto";
-        
-    poidsRecherche.textContent =
-        "⚖️ Poids réel trouvé : " +
-        poidsTrouve.toFixed(3) +
-        " kg";
+            choixEmballage
+                ? choixEmballage.value
+                : "auto";
 
-    // Injection du poids dans le calculateur
-    
+
+        if (
+            donnees.dimensions &&
+            donnees.dimensions.hauteur_cm !== null &&
+            donnees.dimensions.longueur_cm !== null &&
+            donnees.dimensions.largeur_cm !== null
+        ) {
+
+            const hauteurTrouvee =
+                parseFloat(
+                    donnees.dimensions.hauteur_cm
+                );
+
+            const longueurTrouvee =
+                parseFloat(
+                    donnees.dimensions.longueur_cm
+                );
+
+            const largeurTrouvee =
+                parseFloat(
+                    donnees.dimensions.largeur_cm
+                );
+
+
+            dimensionsRecherche.textContent =
+                "📏 Dimensions trouvées : " +
+                hauteurTrouvee.toFixed(2) +
+                " × " +
+                longueurTrouvee.toFixed(2) +
+                " × " +
+                largeurTrouvee.toFixed(2) +
+                " cm";
+
+
+            // Injection des dimensions
+            hauteur.value =
+                hauteurTrouvee;
+
+            longueur.value =
+                longueurTrouvee;
+
+            largeur.value =
+                largeurTrouvee;
+
+        }
+
+        else {
+
+            dimensionsRecherche.textContent =
+                "📏 Dimensions trouvées : Non disponibles";
+        }
+
+
         // ==========================================
-// POIDS PRODUIT + EMBALLAGE
-// ==========================================
+        // EMBALLAGE AUTOMATIQUE
+        // ==========================================
 
-poids.value = poidsTrouve;
+        if (
+            emballageFinal === "auto"
+        ) {
+
+            emballageFinal =
+                window.typeEmballageAuto ||
+                "carton";
+        }
+
+
+        window.typeEmballageAuto =
+            emballageFinal;
+
 
         // ==========================================
-// DÉTECTION AUTOMATIQUE DE L'EMBALLAGE
-// ==========================================
+        // AFFICHER L'EMBALLAGE
+        // ==========================================
 
-window.typeEmballageAuto = "carton";
-
-// Produit recherché
-const produitRecherche =
-    texteRecherche.toLowerCase();
-
-// Petits produits / accessoires
-if (
-    produitRecherche.includes("câble") ||
-    produitRecherche.includes("cable") ||
-    produitRecherche.includes("chargeur") ||
-    produitRecherche.includes("écouteur") ||
-    produitRecherche.includes("ecouteur") ||
-    produitRecherche.includes("coque") ||
-    produitRecherche.includes("étui") ||
-    produitRecherche.includes("etui") ||
-    produitRecherche.includes("adaptateur") ||
-    produitRecherche.includes("petit accessoire")
-) {
-
-    window.typeEmballageAuto = "petit-sachet";
-
-}
-
-// Produits plats ou fragiles
-else if (
-    produitRecherche.includes("document") ||
-    produitRecherche.includes("livre") ||
-    produitRecherche.includes("enveloppe") ||
-    produitRecherche.includes("photo")
-) {
-
-    window.typeEmballageAuto = "enveloppe";
-
-}
-
-// Produits volumineux
-else if (
-    produitRecherche.includes("ordinateur") ||
-    produitRecherche.includes("pc portable") ||
-    produitRecherche.includes("écran") ||
-    produitRecherche.includes("ecran") ||
-    produitRecherche.includes("télévision") ||
-    produitRecherche.includes("television") ||
-    produitRecherche.includes("imprimante")
-) {
-
-    window.typeEmballageAuto = "grand-carton";
-
-}
-
-// Smartphones et appareils électroniques
-else if (
-    produitRecherche.includes("iphone") ||
-    produitRecherche.includes("smartphone") ||
-    produitRecherche.includes("téléphone") ||
-    produitRecherche.includes("telephone") ||
-    produitRecherche.includes("tablette") ||
-    produitRecherche.includes("ipad")
-) {
-
-    window.typeEmballageAuto = "carton";
-}
-
-// ==========================================
-// DIMENSIONS TROUVÉES PAR LA RECHERCHE
-// ==========================================
-
-if (
-    donnees.dimensions &&
-    donnees.dimensions.hauteur_cm !== null &&
-    donnees.dimensions.longueur_cm !== null &&
-    donnees.dimensions.largeur_cm !== null
-) {
-
-    const hauteurTrouvee =
-        parseFloat(donnees.dimensions.hauteur_cm);
-
-    const longueurTrouvee =
-        parseFloat(donnees.dimensions.longueur_cm);
-
-    const largeurTrouvee =
-        parseFloat(donnees.dimensions.largeur_cm);
+        calculerInformationsEmballage(
+            emballageFinal
+        );
 
 
-    // Affichage des dimensions trouvées
-    dimensionsRecherche.textContent =
-        "📏 Dimensions trouvées : " +
-        hauteurTrouvee.toFixed(2) + " × " +
-        longueurTrouvee.toFixed(2) + " × " +
-        largeurTrouvee.toFixed(2) +
-        " cm";
+        // ==========================================
+        // POIDS FACTURABLE
+        // ==========================================
 
-   // Injection des dimensions dans le calculateur
-hauteur.value = hauteurTrouvee;
-longueur.value = longueurTrouvee;
-largeur.value = largeurTrouvee;
+        const poidsFacturable =
+            calculerPoidsFacturable(
+                emballageFinal
+            );
 
 
-// ==========================================
-// AFFICHER L'EMBALLAGE AUTOMATIQUE
-// ==========================================
+        poidsFacturableRecherche.textContent =
+            "💰 Poids facturable : " +
+            poidsFacturable.toFixed(3) +
+            " kg";
 
-// Si Automatique est sélectionné,
-// utiliser l'emballage détecté
-if (emballageFinal === "auto") {
 
-    emballageFinal =
-        window.typeEmballageAuto;
-}
-
-// Mémoriser le choix
-window.typeEmballageAuto =
-    emballageFinal;
-
-// Afficher l'emballage choisi
-calculerInformationsEmballage(
-    emballageFinal
-);
-
-} else {
-
-    dimensionsRecherche.textContent =
-        "📏 Dimensions trouvées : Non disponibles";
-}
-      
-    // ==========================================
-    // CALCUL DU POIDS FACTURABLE
-    // ==========================================
-
-   const poidsFacturable =
-    calculerPoidsFacturable(emballageFinal);
-
-    poidsFacturableRecherche.textContent =
-        "💰 Poids facturable : " +
-        poidsFacturable.toFixed(3) +
-        " kg";
-
+        // ==========================================
+        // MESSAGE FINAL
+        // ==========================================
 
         etatRechercheProduit.textContent =
-        "✅ Recherche effectuée pour : " +
-        texteRecherche;
+            "✅ Recherche effectuée pour : " +
+            texteRecherche;
 
-} else {
+    }
+
+    else {
 
         poidsRecherche.textContent =
             "⚖️ Poids réel trouvé : Non disponible";
@@ -1855,7 +2034,26 @@ calculerInformationsEmballage(
     }
 
 })
+
 .catch(function (erreur) {
+
+    console.error(
+        "Erreur recherche produit :",
+        erreur
+    );
+
+    sourceProduit.textContent =
+        "🌐 Source : Erreur";
+
+    poidsRecherche.textContent =
+        "⚖️ Poids réel trouvé : Non disponible";
+
+    poidsFacturableRecherche.textContent =
+        "💰 Poids facturable : Non calculable";
+
+    etatRechercheProduit.textContent =
+        "❌ Impossible d'effectuer la recherche.";
+});
 
     console.error("Erreur recherche produit :", erreur);
 
