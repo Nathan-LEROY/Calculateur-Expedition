@@ -1565,12 +1565,6 @@ if (boutonSupprimer) {
 // BOUTON RECHERCHER - INFORMATIONS PRODUIT
 // =====================================================
 
-const btnRechercheProduit = document.getElementById("btnRechercheProduit");
-
-// =====================================================
-// BOUTON RECHERCHER - INFORMATIONS PRODUIT
-// =====================================================
-
 const btnRechercheProduit =
     document.getElementById("btnRechercheProduit");
 
