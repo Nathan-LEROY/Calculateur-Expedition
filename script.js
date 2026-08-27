@@ -1587,6 +1587,22 @@ const poidsFacturableRecherche =
 
         const texteRecherche = rechercheProduit.value.trim();
 
+        // ==========================================
+// DÉTECTION DE LA POINTURE
+// ==========================================
+
+let pointureRecherchee = null;
+
+const correspondancePointure =
+    texteRecherche.match(/\b(2[4-9]|3[0-9]|4[0-3])\s*FR\b/i);
+
+if (correspondancePointure) {
+
+    pointureRecherchee =
+        parseInt(correspondancePointure[1]);
+
+}
+
         if (texteRecherche === "") {
 
             sourceProduit.textContent = "🌐 Source : Aucune recherche";
