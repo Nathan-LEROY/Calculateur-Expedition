@@ -2071,29 +2071,3 @@ fetch(urlAPI)
 });
     });
 }
-
-
-// ==========================================
-// TEST DU BOUTON RECHERCHE
-// ==========================================
-
-console.log("SCRIPT.JS CHARGÉ");
-
-const testRecherche =
-    document.getElementById("btnRechercheProduit");
-
-if (testRecherche) {
-
-    console.log("BOUTON RECHERCHE TROUVÉ");
-
-    testRecherche.addEventListener("click", function () {
-
-        alert("✅ Le bouton RECHERCHER fonctionne !");
-
-    });
-
-} else {
-
-    console.log("❌ BOUTON RECHERCHE INTROUVABLE");
-
-}
