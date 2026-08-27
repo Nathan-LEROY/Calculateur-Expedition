@@ -1,4 +1,4 @@
-const CACHE_NAME = "calculateur-expedition-v1";
+const CACHE_NAME = "calculateur-expedition-v2";
 
 const FICHIERS = [
     "./",
@@ -11,58 +11,51 @@ const FICHIERS = [
 self.addEventListener("install", function(event) {
 
     event.waitUntil(
-
         caches.open(CACHE_NAME)
             .then(function(cache) {
-
                 return cache.addAll(FICHIERS);
-
             })
-
+            .then(function() {
+                return self.skipWaiting();
+            })
     );
 
 });
-
 
 self.addEventListener("activate", function(event) {
 
     event.waitUntil(
+        caches.keys()
+            .then(function(cacheNames) {
 
-        caches.keys().then(function(nomsCaches) {
+                return Promise.all(
+                    cacheNames.map(function(cacheName) {
 
-            return Promise.all(
-
-                nomsCaches
-                    .filter(function(nom) {
-
-                        return nom !== CACHE_NAME;
-
-                    })
-                    .map(function(nom) {
-
-                        return caches.delete(nom);
+                        if (cacheName !== CACHE_NAME) {
+                            return caches.delete(cacheName);
+                        }
 
                     })
+                );
 
-            );
-
-        })
-
+            })
+            .then(function() {
+                return self.clients.claim();
+            })
     );
 
 });
-
 
 self.addEventListener("fetch", function(event) {
 
     event.respondWith(
 
-        caches.match(event.request)
-            .then(function(reponse) {
-
-                return reponse ||
-                    fetch(event.request);
-
+        fetch(event.request)
+            .then(function(response) {
+                return response;
+            })
+            .catch(function() {
+                return caches.match(event.request);
             })
 
     );
