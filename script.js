@@ -1635,6 +1635,11 @@ fetch(
     const poidsTrouve =
         parseFloat(donnees.poids_reel) || 0;
 
+        let emballageFinal =
+    choixEmballage
+        ? choixEmballage.value
+        : "auto";
+        
     poidsRecherche.textContent =
         "⚖️ Poids réel trouvé : " +
         poidsTrouve.toFixed(3) +
@@ -1745,29 +1750,15 @@ if (
         largeurTrouvee.toFixed(2) +
         " cm";
 
+   // Injection des dimensions dans le calculateur
+hauteur.value = hauteurTrouvee;
+longueur.value = longueurTrouvee;
+largeur.value = largeurTrouvee;
 
-    // Injection des dimensions dans le calculateur
-    hauteur.value = hauteurTrouvee;
-    longueur.value = longueurTrouvee;
-    largeur.value = largeurTrouvee;
-
-
-    // ==========================================
-    // AFFICHER L'EMBALLAGE AUTOMATIQUE
-    // ==========================================
-
-    // ==========================================
-// CHOIX DE L'EMBALLAGE
-// ==========================================
 
 // ==========================================
-// CHOIX DE L'EMBALLAGE
+// AFFICHER L'EMBALLAGE AUTOMATIQUE
 // ==========================================
-
-let emballageFinal =
-    choixEmballage
-        ? choixEmballage.value
-        : "auto";
 
 // Si Automatique est sélectionné,
 // utiliser l'emballage détecté
