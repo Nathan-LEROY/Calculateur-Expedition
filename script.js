@@ -2230,7 +2230,10 @@ if (btnRechercheProduit) {
                     "statut-recherche-info"
                 );
 
-
+            const pointureAffichee =
+    document.getElementById(
+        "pointure-recherche-info"
+    );
             // ==========================================
             // TEXTE DE RECHERCHE
             // ==========================================
@@ -2515,6 +2518,22 @@ if (btnRechercheProduit) {
 
                 }
 
+                // ==========================================
+                // POINTURE
+                // ==========================================
+
+if (
+    pointureAffichee
+) {
+
+    pointureAffichee.textContent =
+        "👟 Pointure demandée : " +
+        (
+            donnees.pointure ||
+            "—"
+        );
+
+}
 
                 // ==========================================
                 // POIDS
