@@ -2214,12 +2214,7 @@ if (btnRechercheProduit) {
                 document.getElementById(
                     "produit-recherche-info"
                 );
-
-            const referenceAffichee =
-                document.getElementById(
-                    "reference-recherche-info"
-                );
-
+            
             const modeleAffiche =
                 document.getElementById(
                     "modele-recherche-info"
@@ -2229,11 +2224,7 @@ if (btnRechercheProduit) {
                 document.getElementById(
                     "statut-recherche-info"
                 );
-
-            const pointureAffichee =
-    document.getElementById(
-        "pointure-recherche-info"
-    );
+    
             // ==========================================
             // TEXTE DE RECHERCHE
             // ==========================================
@@ -2286,15 +2277,6 @@ if (btnRechercheProduit) {
                         "📦 Produit recherché : —";
 
                 }
-
-
-                if (referenceAffichee) {
-
-                    referenceAffichee.textContent =
-                        "🔖 Référence : —";
-
-                }
-
 
                 if (modeleAffiche) {
 
@@ -2482,25 +2464,6 @@ if (btnRechercheProduit) {
 
                 }
 
-
-                // ==========================================
-                // RÉFÉRENCE
-                // ==========================================
-
-                if (
-                    referenceAffichee
-                ) {
-
-                    referenceAffichee.textContent =
-                        "🔖 Référence : " +
-                        (
-                            donnees.reference ||
-                            "—"
-                        );
-
-                }
-
-
                 // ==========================================
                 // MODÈLE
                 // ==========================================
@@ -2517,23 +2480,6 @@ if (btnRechercheProduit) {
                         );
 
                 }
-
-                // ==========================================
-                // POINTURE
-                // ==========================================
-
-if (
-    pointureAffichee
-) {
-
-    pointureAffichee.textContent =
-        "👟 Pointure demandée : " +
-        (
-            donnees.pointure ||
-            "—"
-        );
-
-}
 
                 // ==========================================
                 // POIDS
