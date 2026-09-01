@@ -2043,117 +2043,292 @@ window.addEventListener(
     }
 );
 
-
 // =====================================================
-// APERÇU CAPTURE PRODUIT
+// 📷 CAPTURE PRODUIT + OCR
 // =====================================================
 
 const captureProduit =
-    document.getElementById(
-        "capture-produit"
-    );
+    document.getElementById("capture-produit");
 
 const apercuCapture =
-    document.getElementById(
-        "apercu-capture"
-    );
+    document.getElementById("apercu-capture");
+
+const etatRechercheProduit =
+    document.getElementById("etat-recherche-produit");
 
 
-if (
-    captureProduit &&
-    apercuCapture
-) {
+if (captureProduit && apercuCapture) {
 
     captureProduit.addEventListener(
         "change",
-        function() {
+        async function () {
+
+            const fichier = this.files?.[0];
+
+            if (!fichier) {
+                return;
+            }
+
+
+            // ==========================================
+            // VÉRIFICATION IMAGE
+            // ==========================================
+
+            if (!fichier.type.startsWith("image/")) {
+
+                apercuCapture.innerHTML =
+                    "<p>❌ Veuillez sélectionner une image.</p>";
+
+                return;
+            }
+
+
+            // ==========================================
+            // AFFICHER L'IMAGE
+            // ==========================================
+
+            const lecteur =
+                new FileReader();
+
+
+            lecteur.onload =
+                function (e) {
+
+                    apercuCapture.innerHTML = `
+
+                        <div class="cadre-apercu-capture">
+
+                            <p>
+                                📸 Capture sélectionnée :
+                            </p>
+
+                            <img
+                                src="${e.target.result}"
+                                alt="Capture du produit"
+                                style="
+                                    max-width:100%;
+                                    height:auto;
+                                    display:block;
+                                    margin:auto;
+                                "
+                            >
+
+                            <button
+                                type="button"
+                                id="supprimer-capture">
+
+                                🗑️ SUPPRIMER LA CAPTURE
+
+                            </button>
+
+                        </div>
+
+                    `;
+
+
+                    const boutonSupprimer =
+                        document.getElementById(
+                            "supprimer-capture"
+                        );
+
+
+                    if (boutonSupprimer) {
+
+                        boutonSupprimer.addEventListener(
+                            "click",
+                            function () {
+
+                                captureProduit.value = "";
+
+                                apercuCapture.innerHTML = "";
+
+                                if (etatRechercheProduit) {
+
+                                    etatRechercheProduit.textContent =
+                                        "";
+
+                                }
+
+                            }
+                        );
+
+                    }
+
+                };
+
+
+            lecteur.readAsDataURL(fichier);
+
+
+            // ==========================================
+            // VÉRIFIER TESSERACT
+            // ==========================================
 
             if (
-                this.files &&
-                this.files[0]
+                typeof Tesseract === "undefined"
             ) {
 
-                const fichier =
-                    this.files[0];
+                if (etatRechercheProduit) {
+
+                    etatRechercheProduit.textContent =
+                        "❌ Le système OCR n'est pas chargé.";
+
+                }
+
+                console.error(
+                    "Tesseract.js non chargé."
+                );
+
+                return;
+            }
 
 
-                if (
-                    !fichier.type.startsWith(
-                        "image/"
-                    )
-                ) {
+            // ==========================================
+            // DÉBUT OCR
+            // ==========================================
 
-                    apercuCapture.innerHTML =
-                        "<p>❌ Veuillez sélectionner une image.</p>";
+            if (etatRechercheProduit) {
+
+                etatRechercheProduit.textContent =
+                    "🔎 Lecture du texte de la capture...";
+
+            }
+
+
+            try {
+
+                const resultatOCR =
+                    await Tesseract.recognize(
+                        fichier,
+                        "eng+fra",
+                        {
+
+                            logger: function (info) {
+
+                                console.log(
+                                    "OCR :",
+                                    info
+                                );
+
+
+                                if (
+                                    etatRechercheProduit &&
+                                    info.status ===
+                                        "recognizing text"
+                                ) {
+
+                                    const progression =
+                                        Math.round(
+                                            (info.progress || 0) *
+                                            100
+                                        );
+
+
+                                    etatRechercheProduit.textContent =
+                                        "🔎 Lecture de la capture : " +
+                                        progression +
+                                        "%";
+
+                                }
+
+                            }
+
+                        }
+                    );
+
+
+                // ==========================================
+                // TEXTE OCR
+                // ==========================================
+
+                const texteOCR =
+                    resultatOCR.data.text
+                        .replace(/\s+/g, " ")
+                        .trim();
+
+
+                console.log(
+                    "================================="
+                );
+
+                console.log(
+                    "TEXTE OCR :",
+                    texteOCR
+                );
+
+                console.log(
+                    "================================="
+                );
+
+
+                if (!texteOCR) {
+
+                    if (etatRechercheProduit) {
+
+                        etatRechercheProduit.textContent =
+                            "⚠️ Aucun texte détecté dans la capture.";
+
+                    }
 
                     return;
                 }
 
 
-                const lecteur =
-                    new FileReader();
+                // ==========================================
+                // REMPLIR LE CHAMP RECHERCHE
+                // ==========================================
+
+                const rechercheProduit =
+                    document.getElementById(
+                        "recherche-produit"
+                    );
 
 
-                lecteur.onload =
-                    function(e) {
+                if (rechercheProduit) {
 
-                        apercuCapture.innerHTML = `
-
-<div class="cadre-apercu-capture">
-
-    <p>
-        📸 Capture sélectionnée :
-    </p>
-
-    <img
-        src="${e.target.result}"
-        alt="Aperçu de la capture du produit"
-    >
-
-    <button
-        type="button"
-        id="supprimer-capture">
-
-        🗑️ SUPPRIMER LA CAPTURE
-
-    </button>
-
-</div>
-
-`;
+                    rechercheProduit.value =
+                        texteOCR;
 
 
-                        const boutonSupprimer =
-                            document.getElementById(
-                                "supprimer-capture"
-                            );
+                    rechercheProduit.dispatchEvent(
+                        new Event(
+                            "input",
+                            {
+                                bubbles: true
+                            }
+                        )
+                    );
+
+                }
 
 
-                        if (
-                            boutonSupprimer
-                        ) {
+                // ==========================================
+                // ÉTAT FINAL
+                // ==========================================
 
-                            boutonSupprimer.addEventListener(
-                                "click",
-                                function() {
+                if (etatRechercheProduit) {
 
-                                    captureProduit.value =
-                                        "";
+                    etatRechercheProduit.innerHTML =
+                        "✅ Texte détecté dans la capture.<br>" +
+                        "🔎 Vérifiez le texte puis cliquez sur RECHERCHER.";
 
-                                    apercuCapture.innerHTML =
-                                        "";
+                }
 
-                                }
-                            );
+            }
+            catch (erreur) {
 
-                        }
-
-                    };
-
-
-                lecteur.readAsDataURL(
-                    fichier
+                console.error(
+                    "Erreur OCR :",
+                    erreur
                 );
+
+
+                if (etatRechercheProduit) {
+
+                    etatRechercheProduit.textContent =
+                        "❌ Impossible de lire le texte de la capture.";
+
+                }
 
             }
 
@@ -2161,7 +2336,6 @@ if (
     );
 
 }
-
 
 // =====================================================
 // RECHERCHE INFORMATIONS PRODUIT
