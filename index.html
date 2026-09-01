@@ -3,15 +3,29 @@
 
 <head>
 
-    <link rel="manifest" href="manifest.json">
-
     <meta charset="UTF-8">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#111111"
+    >
+
+    <link
+        rel="manifest"
+        href="manifest.json"
+    >
 
     <title>Calculateur d'Expédition</title>
 
-    <link rel="stylesheet" href="style.css">
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
 
 </head>
 
@@ -38,12 +52,13 @@
 
 <div class="application">
 
-
     <header>
 
         <h1>📦 Calculateur d'Expédition</h1>
 
-        <p>Calcul des frais d'envoi</p>
+        <p>
+            Calcul des frais d'envoi
+        </p>
 
     </header>
 
@@ -113,7 +128,10 @@
              SERVICE AVION
         ========================================== -->
 
-        <section class="bloc" id="bloc-service">
+        <section
+            class="bloc"
+            id="bloc-service"
+        >
 
             <h2>⚡ Service avion</h2>
 
@@ -140,12 +158,13 @@
              INFORMATIONS PRODUIT
         ========================================== -->
 
-        <section class="bloc" id="infos-produit">
+        <section
+            class="bloc"
+            id="infos-produit"
+        >
 
             <h2>🔎 INFORMATIONS PRODUIT</h2>
 
-
-            <!-- RECHERCHE -->
 
             <div class="recherche-produit">
 
@@ -158,21 +177,17 @@
 
                 <button
                     type="button"
-                    id="btnRechercheProduit">
-
+                    id="btnRechercheProduit"
+                >
                     🔎 RECHERCHER
-
                 </button>
 
 
-                <!-- CAPTURE -->
-
                 <label
                     for="capture-produit"
-                    class="bouton-capture">
-
+                    class="bouton-capture"
+                >
                     📷 AJOUTER UNE CAPTURE
-
                 </label>
 
 
@@ -184,12 +199,8 @@
                 >
 
 
-                <!-- APERÇU -->
-
                 <div id="apercu-capture"></div>
 
-
-                <!-- ÉTAT RECHERCHE -->
 
                 <div id="etat-recherche-produit"></div>
 
@@ -197,101 +208,75 @@
 
 
             <!-- ======================================
-                 RÉSULTAT RECHERCHE
+                 RÉSULTATS
             ======================================= -->
 
             <div class="resultat-recherche-produit">
 
 
                 <small id="source-produit">
-
                     🌐 Source : —
-
                 </small>
 
 
                 <small id="produit-recherche-info">
+                    📦 Produit recherché : —
+                </small>
 
-    📦 Produit recherché : —
-
-</small>
 
                 <small id="modele-recherche-info">
-
-    🏷️ Modèle : —
-
-</small>
+                    🏷️ Modèle : —
+                </small>
 
 
-<small id="statut-recherche-info">
+                <small id="statut-recherche-info">
+                    ℹ️ Statut : —
+                </small>
 
-    ℹ️ Statut : —
-
-</small>
 
                 <small id="poids-recherche">
-
                     ⚖️ Poids réel trouvé : —
-
                 </small>
 
 
                 <small id="dimensions-recherche">
-
                     📏 Dimensions trouvées : —
-
                 </small>
 
 
                 <small id="poids-facturable-recherche">
-
                     💰 Poids facturable : —
-
                 </small>
 
 
-                <!-- ==================================
-                     EMBALLAGE
-                =================================== -->
+                <!-- EMBALLAGE -->
 
                 <small id="emballage-recherche">
-
                     📦 EMBALLAGE : —
-
                 </small>
 
 
                 <small id="type-emballage-info">
-
                     🏷️ Type : —
-
                 </small>
 
 
                 <small id="poids-emballage-info">
-
                     ⚖️ Poids emballage : —
-
                 </small>
 
 
                 <small id="dimensions-emballage-info">
-
                     📏 Dimensions emballage : —
-
                 </small>
 
 
-                <!-- ==================================
-                     CHOIX EMBALLAGE
-                =================================== -->
+                <!-- CHOIX EMBALLAGE -->
 
                 <div class="zone-choix-emballage">
 
                     <label for="choix-emballage">
-
                         📦 Choisir l'emballage :
-
                     </label>
 
 
@@ -344,7 +329,7 @@
 
 
         <!-- ==========================================
-             DIMENSIONS DU COLIS
+             DIMENSIONS
         ========================================== -->
 
         <section class="bloc">
@@ -412,15 +397,16 @@
              POIDS
         ========================================== -->
 
-        <section class="bloc" id="bloc-poids">
+        <section
+            class="bloc"
+            id="bloc-poids"
+        >
 
             <h2>⚖️ Poids</h2>
 
 
             <label for="poids">
-
                 Poids réel (kg)
-
             </label>
 
 
@@ -428,15 +414,15 @@
                 type="number"
                 id="poids"
                 min="0"
-                step="0.01"
-                placeholder="Exemple : 8"
+                step="0.001"
+                placeholder="Exemple : 0.171"
             >
 
         </section>
 
 
         <!-- ==========================================
-             PRIX MARCHANDISE
+             PRIX
         ========================================== -->
 
         <section class="bloc">
@@ -445,9 +431,7 @@
 
 
             <label for="prix-yuan">
-
                 Prix d'achat en Yuan
-
             </label>
 
 
@@ -463,18 +447,19 @@
 
 
         <!-- ==========================================
-             TAUX DE CHANGE
+             TAUX
         ========================================== -->
 
-        <section class="bloc" id="bloc-taux">
+        <section
+            class="bloc"
+            id="bloc-taux"
+        >
 
             <h2>💱 Taux de change</h2>
 
 
             <label for="taux-yuan">
-
                 1 Yuan = combien de AR ?
-
             </label>
 
 
@@ -490,9 +475,7 @@
             <div id="zone-taux-dollar">
 
                 <label for="taux-dollar">
-
                     1 Dollar = combien de AR ?
-
                 </label>
 
 
@@ -517,31 +500,26 @@
 
 
             <button id="calculer">
-
                 🧮 CALCULER
-
             </button>
 
 
             <button
                 type="button"
                 id="btnDevis"
-                onclick="ajouterDevis()">
-
+                onclick="ajouterDevis()"
+            >
                 📄 AJOUTER AU DEVIS
-
             </button>
 
 
             <button
                 type="button"
                 id="btnReset"
-                onclick="reinitialiser()">
-
+                onclick="reinitialiser()"
+            >
                 🔄 RÉINITIALISER
-
             </button>
-
 
         </section>
 
@@ -558,10 +536,8 @@
             <div id="resultats">
 
                 <p>
-
                     Remplissez les informations puis cliquez
                     sur <strong>CALCULER</strong>.
-
                 </p>
 
             </div>
@@ -589,13 +565,31 @@
 
 if ("serviceWorker" in navigator) {
 
-    window.addEventListener("load", function() {
+    window.addEventListener(
+        "load",
+        function() {
 
-        navigator.serviceWorker.register(
-            "service-worker.js"
-        );
+            navigator.serviceWorker
+                .register("service-worker.js")
+                .then(function(registration) {
 
-    });
+                    console.log(
+                        "Service Worker enregistré :",
+                        registration.scope
+                    );
+
+                })
+                .catch(function(erreur) {
+
+                    console.error(
+                        "Erreur Service Worker :",
+                        erreur
+                    );
+
+                });
+
+        }
+    );
 
 }
 
@@ -610,10 +604,9 @@ if ("serviceWorker" in navigator) {
     type="button"
     id="btnAfficherDevis"
     class="bouton-devis"
-    onclick="afficherMasquerDevis()">
-
+    onclick="afficherMasquerDevis()"
+>
     📄 DEVIS
-
 </button>
 
 
@@ -623,50 +616,46 @@ if ("serviceWorker" in navigator) {
 
 <section
     class="bloc"
-    id="bloc-devis">
-
+    id="bloc-devis"
+    style="display:none;"
+>
 
     <h2>📄 DEVIS</h2>
 
 
     <div
         id="liste-devis"
-        class="bloc-notes-devis">
-    </div>
+        class="bloc-notes-devis"
+    ></div>
 
 
     <button
         type="button"
         id="btnEffacerDevis"
-        onclick="effacerDevis()">
-
+        onclick="effacerDevis()"
+    >
         🗑️ EFFACER LES DEVIS
-
     </button>
 
 
     <button
         type="button"
         id="btnCopierDevis"
-        onclick="copierDevis()">
-
+        onclick="copierDevis()"
+    >
         📋 COPIER LES DEVIS
-
     </button>
 
 
     <button
         type="button"
         id="btnImprimerDevis"
-        onclick="imprimerDevis()">
-
+        onclick="imprimerDevis()"
+    >
         🖨️ IMPRIMER LES DEVIS
-
     </button>
 
-
 </section>
-
 
 </body>
 
