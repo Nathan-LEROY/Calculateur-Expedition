@@ -1,27 +1,21 @@
-```html
 <!DOCTYPE html>
 <html lang="fr">
 
 <head>
 
-    <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <meta name="theme-color" content="#111111">
-
     <link rel="manifest" href="manifest.json">
 
-    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Calculateur d'Expédition</title>
 
+    <link rel="stylesheet" href="style.css">
+
 </head>
 
-
 <body>
-
 
 <header class="entete-application">
 
@@ -45,497 +39,554 @@
 <div class="application">
 
 
-<header>
+    <header>
 
-    <h1>📦 Calculateur d'Expédition</h1>
+        <h1>📦 Calculateur d'Expédition</h1>
 
-    <p>
-        Calcul des frais d'envoi
-    </p>
+        <p>Calcul des frais d'envoi</p>
 
-</header>
+    </header>
 
 
-<main>
+    <main>
 
 
-<!-- ==========================================
-     MODE TRANSPORT
-========================================== -->
+        <!-- ==========================================
+             MODE D'EXPÉDITION
+        ========================================== -->
 
-<section class="bloc">
+        <section class="bloc">
 
-    <h2>🚚 Mode d'expédition</h2>
+            <h2>🚚 Mode d'expédition</h2>
 
-    <label for="transport">
-        Choisir le transport :
-    </label>
-
-    <select id="transport">
-
-        <option value="avion">
-            ✈️ Avion
-        </option>
-
-        <option value="maritime">
-            🚢 Maritime
-        </option>
-
-    </select>
-
-</section>
-
-
-<!-- ==========================================
-     MARCHANDISE
-========================================== -->
-
-<section class="bloc">
-
-    <h2>📦 Marchandise</h2>
-
-    <label for="marchandise">
-        Type de marchandise :
-    </label>
-
-    <select id="marchandise">
-
-        <option value="general">
-            Marchandise générale
-        </option>
-
-        <option value="batterie">
-            Marchandise avec batterie
-        </option>
-
-        <option value="poudre">
-            Poudre / Liquide / Aimant
-        </option>
-
-    </select>
-
-</section>
-
-
-<!-- ==========================================
-     SERVICE AVION
-========================================== -->
-
-<section class="bloc" id="bloc-service">
-
-    <h2>⚡ Service avion</h2>
-
-    <label for="service">
-        Type de service :
-    </label>
-
-    <select id="service">
-
-        <option value="express">
-            EXPRESS
-        </option>
-
-        <option value="normal">
-            NORMAL
-        </option>
-
-    </select>
-
-</section>
-
-
-<!-- ==========================================
-     INFORMATIONS PRODUIT
-========================================== -->
-
-<section class="bloc" id="infos-produit">
-
-    <h2>🔎 INFORMATIONS PRODUIT</h2>
-
-
-    <div class="recherche-produit">
-
-
-        <input
-            type="text"
-            id="recherche-produit"
-            placeholder="🔎 Produit ou lien du produit"
-        >
-
-
-        <button
-            type="button"
-            id="btnRechercheProduit">
-
-            🔎 RECHERCHER
-
-        </button>
-
-
-        <label
-            for="capture-produit"
-            class="bouton-capture">
-
-            📷 AJOUTER UNE CAPTURE
-
-        </label>
-
-
-        <input
-            type="file"
-            id="capture-produit"
-            accept="image/*"
-            style="display:none;"
-        >
-
-
-        <div id="apercu-capture"></div>
-
-
-        <div id="etat-recherche-produit"></div>
-
-
-    </div>
-
-
-    <div class="resultat-recherche-produit">
-
-
-        <small id="source-produit">
-            🌐 Source : —
-        </small>
-
-
-        <small id="produit-recherche-info">
-            📦 Produit recherché : —
-        </small>
-
-
-        <small id="modele-recherche-info">
-            🏷️ Modèle : —
-        </small>
-
-
-        <small id="statut-recherche-info">
-            ℹ️ Statut : —
-        </small>
-
-
-        <small id="poids-recherche">
-            ⚖️ Poids réel trouvé : —
-        </small>
-
-
-        <small id="dimensions-recherche">
-            📏 Dimensions trouvées : —
-        </small>
-
-
-        <small id="poids-facturable-recherche">
-            💰 Poids facturable : —
-        </small>
-
-
-        <small id="emballage-recherche">
-            📦 EMBALLAGE : —
-        </small>
-
-
-        <small id="type-emballage-info">
-            🏷️ Type : —
-        </small>
-
-
-        <small id="poids-emballage-info">
-            ⚖️ Poids emballage : —
-        </small>
-
-
-        <small id="dimensions-emballage-info">
-            📏 Dimensions emballage : —
-        </small>
-
-
-        <div class="zone-choix-emballage">
-
-
-            <label for="choix-emballage">
-                📦 Choisir l'emballage :
+            <label for="transport">
+                Choisir le transport :
             </label>
 
+            <select id="transport">
 
-            <select id="choix-emballage">
-
-                <option value="auto">
-                    🔄 Automatique
+                <option value="avion">
+                    ✈️ Avion
                 </option>
 
-                <option value="petit-sachet">
-                    🛍️ Petit sachet
-                </option>
-
-                <option value="sachet">
-                    🛍️ Sachet
-                </option>
-
-                <option value="enveloppe">
-                    ✉️ Enveloppe
-                </option>
-
-                <option value="petit-carton">
-                    📦 Petit carton
-                </option>
-
-                <option value="carton">
-                    📦 Carton
-                </option>
-
-                <option value="grand-carton">
-                    📦 Grand carton
+                <option value="maritime">
+                    🚢 Maritime
                 </option>
 
             </select>
 
-
-        </div>
-
-
-        <small class="info-indicative">
-
-            📦 Informations indicatives :
-            vérifiez toujours le poids et les dimensions
-            du colis avant l'expédition.
-
-        </small>
+        </section>
 
 
-    </div>
+        <!-- ==========================================
+             TYPE DE MARCHANDISE
+        ========================================== -->
 
-</section>
+        <section class="bloc">
 
+            <h2>📦 Marchandise</h2>
 
-<!-- ==========================================
-     DIMENSIONS
-========================================== -->
-
-<section class="bloc">
-
-    <h2>📏 Dimensions du colis</h2>
-
-
-    <div class="champs">
-
-
-        <div>
-
-            <label for="hauteur">
-                Hauteur (cm)
+            <label for="marchandise">
+                Type de marchandise :
             </label>
+
+            <select id="marchandise">
+
+                <option value="general">
+                    Marchandise générale
+                </option>
+
+                <option value="batterie">
+                    Marchandise avec batterie
+                </option>
+
+                <option value="poudre">
+                    Poudre / Liquide / Aimant
+                </option>
+
+            </select>
+
+        </section>
+
+
+        <!-- ==========================================
+             SERVICE AVION
+        ========================================== -->
+
+        <section class="bloc" id="bloc-service">
+
+            <h2>⚡ Service avion</h2>
+
+            <label for="service">
+                Type de service :
+            </label>
+
+            <select id="service">
+
+                <option value="express">
+                    EXPRESS
+                </option>
+
+                <option value="normal">
+                    NORMAL
+                </option>
+
+            </select>
+
+        </section>
+
+
+        <!-- ==========================================
+             INFORMATIONS PRODUIT
+        ========================================== -->
+
+        <section class="bloc" id="infos-produit">
+
+            <h2>🔎 INFORMATIONS PRODUIT</h2>
+
+
+            <!-- RECHERCHE -->
+
+            <div class="recherche-produit">
+
+                <input
+                    type="text"
+                    id="recherche-produit"
+                    placeholder="🔎 Indiquez le produit ou collez un lien"
+                >
+
+
+                <button
+                    type="button"
+                    id="btnRechercheProduit">
+
+                    🔎 RECHERCHER
+
+                </button>
+
+
+                <!-- CAPTURE -->
+
+                <label
+                    for="capture-produit"
+                    class="bouton-capture">
+
+                    📷 AJOUTER UNE CAPTURE
+
+                </label>
+
+
+                <input
+                    type="file"
+                    id="capture-produit"
+                    accept="image/*"
+                    style="display:none;"
+                >
+
+
+                <!-- APERÇU -->
+
+                <div id="apercu-capture"></div>
+
+
+                <!-- ÉTAT RECHERCHE -->
+
+                <div id="etat-recherche-produit"></div>
+
+            </div>
+
+
+            <!-- ======================================
+                 RÉSULTAT RECHERCHE
+            ======================================= -->
+
+            <div class="resultat-recherche-produit">
+
+
+                <small id="source-produit">
+
+                    🌐 Source : —
+
+                </small>
+
+
+                <small id="produit-recherche-info">
+
+    📦 Produit recherché : —
+
+</small>
+
+                <small id="poids-recherche">
+
+                    ⚖️ Poids réel trouvé : —
+
+                </small>
+
+
+                <small id="dimensions-recherche">
+
+                    📏 Dimensions trouvées : —
+
+                </small>
+
+
+                <small id="poids-facturable-recherche">
+
+                    💰 Poids facturable : —
+
+                </small>
+
+
+                <!-- ==================================
+                     EMBALLAGE
+                =================================== -->
+
+                <small id="emballage-recherche">
+
+                    📦 EMBALLAGE : —
+
+                </small>
+
+
+                <small id="type-emballage-info">
+
+                    🏷️ Type : —
+
+                </small>
+
+
+                <small id="poids-emballage-info">
+
+                    ⚖️ Poids emballage : —
+
+                </small>
+
+
+                <small id="dimensions-emballage-info">
+
+                    📏 Dimensions emballage : —
+
+                </small>
+
+
+                <!-- ==================================
+                     CHOIX EMBALLAGE
+                =================================== -->
+
+                <div class="zone-choix-emballage">
+
+                    <label for="choix-emballage">
+
+                        📦 Choisir l'emballage :
+
+                    </label>
+
+
+                    <select id="choix-emballage">
+
+                        <option value="auto">
+                            🔄 Automatique
+                        </option>
+
+                        <option value="petit-sachet">
+                            🛍️ Petit sachet
+                        </option>
+
+                        <option value="sachet">
+                            🛍️ Sachet
+                        </option>
+
+                        <option value="enveloppe">
+                            ✉️ Enveloppe
+                        </option>
+
+                        <option value="petit-carton">
+                            📦 Petit carton
+                        </option>
+
+                        <option value="carton">
+                            📦 Carton
+                        </option>
+
+                        <option value="grand-carton">
+                            📦 Grand carton
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <small class="info-indicative">
+
+                    📦 Informations indicatives :
+                    vérifiez le poids et les dimensions
+                    du colis avant l'expédition.
+
+                </small>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==========================================
+             DIMENSIONS DU COLIS
+        ========================================== -->
+
+        <section class="bloc">
+
+            <h2>📏 Dimensions du colis</h2>
+
+
+            <div class="champs">
+
+
+                <div>
+
+                    <label for="hauteur">
+                        Hauteur (cm)
+                    </label>
+
+                    <input
+                        type="number"
+                        id="hauteur"
+                        min="0"
+                        step="0.01"
+                    >
+
+                </div>
+
+
+                <div>
+
+                    <label for="longueur">
+                        Longueur (cm)
+                    </label>
+
+                    <input
+                        type="number"
+                        id="longueur"
+                        min="0"
+                        step="0.01"
+                    >
+
+                </div>
+
+
+                <div>
+
+                    <label for="largeur">
+                        Largeur (cm)
+                    </label>
+
+                    <input
+                        type="number"
+                        id="largeur"
+                        min="0"
+                        step="0.01"
+                    >
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+        <!-- ==========================================
+             POIDS
+        ========================================== -->
+
+        <section class="bloc" id="bloc-poids">
+
+            <h2>⚖️ Poids</h2>
+
+
+            <label for="poids">
+
+                Poids réel (kg)
+
+            </label>
+
 
             <input
                 type="number"
-                id="hauteur"
+                id="poids"
                 min="0"
                 step="0.01"
+                placeholder="Exemple : 8"
             >
 
-        </div>
+        </section>
 
 
-        <div>
+        <!-- ==========================================
+             PRIX MARCHANDISE
+        ========================================== -->
 
-            <label for="longueur">
-                Longueur (cm)
+        <section class="bloc">
+
+            <h2>💴 Prix de la marchandise</h2>
+
+
+            <label for="prix-yuan">
+
+                Prix d'achat en Yuan
+
             </label>
+
 
             <input
                 type="number"
-                id="longueur"
+                id="prix-yuan"
                 min="0"
                 step="0.01"
+                placeholder="Exemple : 500"
             >
 
-        </div>
+        </section>
 
 
-        <div>
+        <!-- ==========================================
+             TAUX DE CHANGE
+        ========================================== -->
 
-            <label for="largeur">
-                Largeur (cm)
+        <section class="bloc" id="bloc-taux">
+
+            <h2>💱 Taux de change</h2>
+
+
+            <label for="taux-yuan">
+
+                1 Yuan = combien de AR ?
+
             </label>
+
 
             <input
                 type="number"
-                id="largeur"
+                id="taux-yuan"
                 min="0"
                 step="0.01"
+                value="670"
             >
 
-        </div>
 
+            <div id="zone-taux-dollar">
 
-    </div>
+                <label for="taux-dollar">
 
-</section>
+                    1 Dollar = combien de AR ?
 
+                </label>
 
-<!-- ==========================================
-     POIDS
-========================================== -->
 
-<section
-    class="bloc"
-    id="bloc-poids">
+                <input
+                    type="number"
+                    id="taux-dollar"
+                    min="0"
+                    step="0.01"
+                    placeholder="Exemple : 4500"
+                >
 
-    <h2>⚖️ Poids</h2>
+            </div>
 
+        </section>
 
-    <label for="poids">
-        Poids réel du produit (kg)
-    </label>
 
+        <!-- ==========================================
+             BOUTONS
+        ========================================== -->
 
-    <input
-        type="number"
-        id="poids"
-        min="0"
-        step="0.001"
-        placeholder="Exemple : 0.850"
-    >
+        <section class="bloc bouton-zone">
 
-</section>
 
+            <button id="calculer">
 
-<!-- ==========================================
-     PRIX
-========================================== -->
+                🧮 CALCULER
 
-<section class="bloc">
+            </button>
 
-    <h2>💴 Prix de la marchandise</h2>
 
+            <button
+                type="button"
+                id="btnDevis"
+                onclick="ajouterDevis()">
 
-    <label for="prix-yuan">
-        Prix d'achat en Yuan
-    </label>
+                📄 AJOUTER AU DEVIS
 
+            </button>
 
-    <input
-        type="number"
-        id="prix-yuan"
-        min="0"
-        step="0.01"
-        placeholder="Exemple : 500"
-    >
 
-</section>
+            <button
+                type="button"
+                id="btnReset"
+                onclick="reinitialiser()">
 
+                🔄 RÉINITIALISER
 
-<!-- ==========================================
-     TAUX
-========================================== -->
+            </button>
 
-<section class="bloc">
 
-    <h2>💱 Taux de change</h2>
+        </section>
 
 
-    <label for="taux-yuan">
-        1 Yuan = combien de AR ?
-    </label>
+        <!-- ==========================================
+             RÉSULTAT
+        ========================================== -->
 
+        <section class="resultat">
 
-    <input
-        type="number"
-        id="taux-yuan"
-        min="0"
-        step="0.01"
-        value="670"
-    >
+            <h2>📊 Résultat</h2>
 
 
-    <div id="zone-taux-dollar">
+            <div id="resultats">
 
-        <label for="taux-dollar">
-            1 Dollar = combien de AR ?
-        </label>
+                <p>
 
+                    Remplissez les informations puis cliquez
+                    sur <strong>CALCULER</strong>.
 
-        <input
-            type="number"
-            id="taux-dollar"
-            min="0"
-            step="0.01"
-            placeholder="Exemple : 4500"
-        >
+                </p>
 
-    </div>
+            </div>
 
-</section>
+        </section>
 
 
-<!-- ==========================================
-     BOUTONS
-========================================== -->
-
-<section class="bloc bouton-zone">
-
-
-    <button
-        type="button"
-        id="calculer">
-
-        🧮 CALCULER
-
-    </button>
-
-
-    <button
-        type="button"
-        onclick="ajouterDevis()">
-
-        📄 AJOUTER AU DEVIS
-
-    </button>
-
-
-    <button
-        type="button"
-        onclick="reinitialiser()">
-
-        🔄 RÉINITIALISER
-
-    </button>
-
-
-</section>
-
-
-<!-- ==========================================
-     RESULTAT
-========================================== -->
-
-<section class="resultat">
-
-    <h2>📊 Résultat</h2>
-
-
-    <div id="resultats">
-
-        <p>
-            Remplissez les informations puis cliquez
-            sur <strong>CALCULER</strong>.
-        </p>
-
-    </div>
-
-</section>
-
-
-</main>
-
+    </main>
 
 </div>
+
+
+<!-- ==========================================
+     JAVASCRIPT
+========================================== -->
+
+<script src="script.js"></script>
+
+
+<!-- ==========================================
+     SERVICE WORKER
+========================================== -->
+
+<script>
+
+if ("serviceWorker" in navigator) {
+
+    window.addEventListener("load", function() {
+
+        navigator.serviceWorker.register(
+            "service-worker.js"
+        );
+
+    });
+
+}
+
+</script>
 
 
 <!-- ==========================================
@@ -554,13 +605,12 @@
 
 
 <!-- ==========================================
-     DEVIS
+     BLOC-NOTES DES DEVIS
 ========================================== -->
 
 <section
     class="bloc"
-    id="bloc-devis"
-    style="display:none;">
+    id="bloc-devis">
 
 
     <h2>📄 DEVIS</h2>
@@ -574,6 +624,7 @@
 
     <button
         type="button"
+        id="btnEffacerDevis"
         onclick="effacerDevis()">
 
         🗑️ EFFACER LES DEVIS
@@ -583,6 +634,7 @@
 
     <button
         type="button"
+        id="btnCopierDevis"
         onclick="copierDevis()">
 
         📋 COPIER LES DEVIS
@@ -592,6 +644,7 @@
 
     <button
         type="button"
+        id="btnImprimerDevis"
         onclick="imprimerDevis()">
 
         🖨️ IMPRIMER LES DEVIS
@@ -602,27 +655,6 @@
 </section>
 
 
-<script src="script.js"></script>
-
-
-<script>
-
-if ("serviceWorker" in navigator) {
-
-    window.addEventListener("load", function () {
-
-        navigator.serviceWorker.register(
-            "service-worker.js"
-        );
-
-    });
-
-}
-
-</script>
-
-
 </body>
 
 </html>
-```
