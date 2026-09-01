@@ -1,63 +1,220 @@
-const CACHE_NAME = "calculateur-expedition-v2";
+// ==========================================
+// SERVICE WORKER
+// CALCULATEUR D'EXPÉDITION
+// ==========================================
 
-const FICHIERS = [
-    "./",
-    "./index.html",
-    "./style.css",
-    "./script.js",
-    "./manifest.json"
-];
 
-self.addEventListener("install", function(event) {
+const CACHE_NAME =
+    "calculateur-expedition-v3";
 
-    event.waitUntil(
-        caches.open(CACHE_NAME)
-            .then(function(cache) {
-                return cache.addAll(FICHIERS);
-            })
-            .then(function() {
-                return self.skipWaiting();
-            })
-    );
 
-});
+const FICHIERS =
+    [
+        "./",
+        "./index.html",
+        "./style.css",
+        "./script.js",
+        "./manifest.json"
+    ];
 
-self.addEventListener("activate", function(event) {
 
-    event.waitUntil(
-        caches.keys()
-            .then(function(cacheNames) {
+// ==========================================
+// INSTALLATION
+// ==========================================
 
-                return Promise.all(
-                    cacheNames.map(function(cacheName) {
+self.addEventListener(
+    "install",
+    function(event) {
 
-                        if (cacheName !== CACHE_NAME) {
-                            return caches.delete(cacheName);
+        event.waitUntil(
+
+            caches.open(
+                CACHE_NAME
+            )
+            .then(
+                function(cache) {
+
+                    return cache.addAll(
+                        FICHIERS
+                    );
+
+                }
+            )
+
+        );
+
+        self.skipWaiting();
+
+    }
+);
+
+
+// ==========================================
+// ACTIVATION
+// ==========================================
+
+self.addEventListener(
+    "activate",
+    function(event) {
+
+        event.waitUntil(
+
+            caches.keys()
+                .then(
+                    function(nomsCaches) {
+
+                        return Promise.all(
+
+                            nomsCaches.map(
+                                function(nomCache) {
+
+                                    if (
+                                        nomCache !==
+                                        CACHE_NAME
+                                    ) {
+
+                                        return caches.delete(
+                                            nomCache
+                                        );
+
+                                    }
+
+                                }
+                            )
+
+                        );
+
+                    }
+                )
+
+        );
+
+        self.clients.claim();
+
+    }
+);
+
+
+// ==========================================
+// REQUÊTES
+// ==========================================
+
+self.addEventListener(
+    "fetch",
+    function(event) {
+
+        const request =
+            event.request;
+
+
+        // ==========================================
+        // NE PAS METTRE EN CACHE LES REQUÊTES API
+        // ==========================================
+
+        if (
+            request.url.includes(
+                "calculateur-expedition-api"
+            )
+        ) {
+
+            event.respondWith(
+
+                fetch(request)
+                    .catch(
+                        function() {
+
+                            return new Response(
+                                JSON.stringify({
+
+                                    succes:
+                                        false,
+
+                                    message:
+                                        "Connexion au serveur impossible."
+
+                                }),
+                                {
+                                    status: 503,
+
+                                    headers: {
+                                        "Content-Type":
+                                            "application/json"
+                                    }
+                                }
+                            );
+
+                        }
+                    )
+
+            );
+
+            return;
+
+        }
+
+
+        // ==========================================
+        // FICHIERS DE L'APPLICATION
+        // ==========================================
+
+        event.respondWith(
+
+            caches.match(request)
+                .then(
+                    function(reponseCache) {
+
+                        if (
+                            reponseCache
+                        ) {
+
+                            return reponseCache;
+
                         }
 
-                    })
-                );
 
-            })
-            .then(function() {
-                return self.clients.claim();
-            })
-    );
+                        return fetch(request)
+                            .then(
+                                function(reponseReseau) {
 
-});
+                                    if (
+                                        !reponseReseau ||
+                                        reponseReseau.status !== 200 ||
+                                        reponseReseau.type === "opaque"
+                                    ) {
 
-self.addEventListener("fetch", function(event) {
+                                        return reponseReseau;
 
-    event.respondWith(
+                                    }
 
-        fetch(event.request)
-            .then(function(response) {
-                return response;
-            })
-            .catch(function() {
-                return caches.match(event.request);
-            })
 
-    );
+                                    const copie =
+                                        reponseReseau.clone();
 
-});
+
+                                    caches.open(
+                                        CACHE_NAME
+                                    )
+                                    .then(
+                                        function(cache) {
+
+                                            cache.put(
+                                                request,
+                                                copie
+                                            );
+
+                                        }
+                                    );
+
+
+                                    return reponseReseau;
+
+                                }
+                            );
+
+                    }
+                )
+
+        );
+
+    }
+);
