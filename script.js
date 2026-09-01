@@ -1,26 +1,26 @@
-// =====================================================
-// 📦 CALCULATEUR D'EXPÉDITION
-// =====================================================
+// ==========================================
+// CALCULATEUR D'EXPÉDITION
+// ==========================================
 
 
-// =====================================================
+// ==========================================
 // PARAMÈTRES
-// =====================================================
+// ==========================================
 
 const TAUX_YUAN_AR_DEFAUT = 670;
 
 
-// =====================================================
-// URL DU WORKER CLOUDFLARE
-// =====================================================
+// ==========================================
+// URL DU WORKER
+// ==========================================
 
 const URL_WORKER =
     "https://calculateur-expedition-api.jjandrianarivony.workers.dev/";
 
 
-// =====================================================
+// ==========================================
 // TARIFS AVION
-// =====================================================
+// ==========================================
 
 const TARIFS_AVION = {
 
@@ -32,9 +32,9 @@ const TARIFS_AVION = {
 };
 
 
-// =====================================================
+// ==========================================
 // TARIFS MARITIME
-// =====================================================
+// ==========================================
 
 const TARIFS_MARITIME = {
 
@@ -44,9 +44,9 @@ const TARIFS_MARITIME = {
 };
 
 
-// =====================================================
+// ==========================================
 // ÉLÉMENTS HTML
-// =====================================================
+// ==========================================
 
 const transport =
     document.getElementById("transport");
@@ -97,18 +97,17 @@ const choixEmballage =
     document.getElementById("choix-emballage");
 
 
-// =====================================================
-// VARIABLES GLOBALES
-// =====================================================
+// ==========================================
+// TYPE EMBALLAGE AUTOMATIQUE
+// ==========================================
 
-window.typeEmballageAuto = "carton";
+window.typeEmballageAuto =
+    window.typeEmballageAuto || "carton";
 
-let numeroDevis = 0;
 
-
-// =====================================================
+// ==========================================
 // AFFICHER / CACHER LES CHAMPS
-// =====================================================
+// ==========================================
 
 function mettreAJourTransport() {
 
@@ -153,45 +152,86 @@ function mettreAJourTransport() {
 }
 
 
-// =====================================================
-// MARGE EMBALLAGE
-// =====================================================
+// ==========================================
+// CALCUL POIDS VOLUMÉTRIQUE
+// ==========================================
 
-function obtenirMargeEmballage(typeEmballage = "carton") {
+function calculerPoidsVolumetrique(
+    typeEmballage = "carton"
+) {
+
+    const H =
+        parseFloat(hauteur?.value) || 0;
+
+    const L =
+        parseFloat(longueur?.value) || 0;
+
+    const l =
+        parseFloat(largeur?.value) || 0;
+
+
+    let marge = 0;
+
 
     switch (typeEmballage) {
 
         case "petit-sachet":
-            return 1;
+            marge = 1;
+            break;
 
         case "sachet":
-            return 1.5;
+            marge = 1.5;
+            break;
 
         case "enveloppe":
-            return 2;
+            marge = 2;
+            break;
 
         case "petit-carton":
-            return 2;
+            marge = 2;
+            break;
 
         case "carton":
-            return 3;
+            marge = 3;
+            break;
 
         case "grand-carton":
-            return 5;
+            marge = 5;
+            break;
 
         default:
-            return 3;
+            marge = 3;
+            break;
 
     }
+
+
+    const hauteurColis =
+        H + marge * 2;
+
+    const longueurColis =
+        L + marge * 2;
+
+    const largeurColis =
+        l + marge * 2;
+
+
+    return (
+        hauteurColis *
+        longueurColis *
+        largeurColis
+    ) / 6000;
 
 }
 
 
-// =====================================================
-// POIDS EMBALLAGE
-// =====================================================
+// ==========================================
+// POIDS DE L'EMBALLAGE
+// ==========================================
 
-function obtenirPoidsEmballage(typeEmballage = "carton") {
+function obtenirPoidsEmballage(
+    typeEmballage = "carton"
+) {
 
     switch (typeEmballage) {
 
@@ -221,50 +261,45 @@ function obtenirPoidsEmballage(typeEmballage = "carton") {
 }
 
 
-// =====================================================
-// POIDS VOLUMÉTRIQUE
-// =====================================================
+// ==========================================
+// MARGE EMBALLAGE
+// ==========================================
 
-function calculerPoidsVolumetrique(
+function obtenirMargeEmballage(
     typeEmballage = "carton"
 ) {
 
-    const H =
-        parseFloat(hauteur?.value) || 0;
+    switch (typeEmballage) {
 
-    const L =
-        parseFloat(longueur?.value) || 0;
+        case "petit-sachet":
+            return 1;
 
-    const l =
-        parseFloat(largeur?.value) || 0;
+        case "sachet":
+            return 1.5;
 
+        case "enveloppe":
+            return 2;
 
-    const marge =
-        obtenirMargeEmballage(typeEmballage);
+        case "petit-carton":
+            return 2;
 
+        case "carton":
+            return 3;
 
-    const hauteurColis =
-        H + marge * 2;
+        case "grand-carton":
+            return 5;
 
-    const longueurColis =
-        L + marge * 2;
+        default:
+            return 3;
 
-    const largeurColis =
-        l + marge * 2;
-
-
-    return (
-        hauteurColis *
-        longueurColis *
-        largeurColis
-    ) / 6000;
+    }
 
 }
 
 
-// =====================================================
-// POIDS FACTURABLE
-// =====================================================
+// ==========================================
+// CALCUL POIDS FACTURABLE
+// ==========================================
 
 function calculerPoidsFacturable(
     typeEmballage = "carton"
@@ -274,7 +309,9 @@ function calculerPoidsFacturable(
         parseFloat(poids?.value) || 0;
 
     const poidsEmballage =
-        obtenirPoidsEmballage(typeEmballage);
+        obtenirPoidsEmballage(
+            typeEmballage
+        );
 
     const poidsReelColis =
         poidsProduit +
@@ -285,7 +322,6 @@ function calculerPoidsFacturable(
             typeEmballage
         );
 
-
     return Math.max(
         poidsReelColis,
         poidsVolumetrique
@@ -294,11 +330,13 @@ function calculerPoidsFacturable(
 }
 
 
-// =====================================================
+// ==========================================
 // INFORMATIONS EMBALLAGE
-// =====================================================
+// ==========================================
 
-function calculerInformationsEmballage(type) {
+function calculerInformationsEmballage(
+    type
+) {
 
     const typeInfo =
         document.getElementById(
@@ -322,6 +360,7 @@ function calculerInformationsEmballage(type) {
 
 
     if (
+        !type ||
         !typeInfo ||
         !poidsInfo ||
         !dimensionsInfo ||
@@ -342,7 +381,6 @@ function calculerInformationsEmballage(type) {
 
 
     if (
-        !type ||
         H <= 0 ||
         L <= 0 ||
         l <= 0
@@ -443,9 +481,9 @@ function calculerInformationsEmballage(type) {
 }
 
 
-// =====================================================
+// ==========================================
 // VOLUME MARITIME
-// =====================================================
+// ==========================================
 
 function calculerVolumeMaritime() {
 
@@ -468,19 +506,19 @@ function calculerVolumeMaritime() {
 }
 
 
-// =====================================================
+// ==========================================
 // DÉTECTION AUTOMATIQUE EMBALLAGE
-// =====================================================
+// ==========================================
 
-function detecterEmballageAutomatique(produit) {
+function detecterEmballageAutomatique(
+    produit
+) {
 
     const texte =
         (produit || "").toLowerCase();
 
 
-    // -----------------------------------------
-    // PETITS ACCESSOIRES
-    // -----------------------------------------
+    // Petits accessoires
 
     if (
         texte.includes("câble") ||
@@ -502,9 +540,7 @@ function detecterEmballageAutomatique(produit) {
     }
 
 
-    // -----------------------------------------
-    // DOCUMENTS
-    // -----------------------------------------
+    // Documents / petits objets plats
 
     if (
         texte.includes("document") ||
@@ -520,9 +556,7 @@ function detecterEmballageAutomatique(produit) {
     }
 
 
-    // -----------------------------------------
-    // GROS PRODUITS
-    // -----------------------------------------
+    // Gros produits
 
     if (
         texte.includes("ordinateur") ||
@@ -546,9 +580,7 @@ function detecterEmballageAutomatique(produit) {
     }
 
 
-    // -----------------------------------------
-    // TÉLÉPHONES / TABLETTES
-    // -----------------------------------------
+    // Téléphones et tablettes
 
     if (
         texte.includes("iphone") ||
@@ -574,9 +606,7 @@ function detecterEmballageAutomatique(produit) {
     }
 
 
-    // -----------------------------------------
-    // CHAUSSURES
-    // -----------------------------------------
+    // Chaussures
 
     if (
         texte.includes("chaussure") ||
@@ -601,9 +631,7 @@ function detecterEmballageAutomatique(produit) {
     }
 
 
-    // -----------------------------------------
-    // VÊTEMENTS
-    // -----------------------------------------
+    // Vêtements
 
     if (
         texte.includes("vêtement") ||
@@ -624,18 +652,24 @@ function detecterEmballageAutomatique(produit) {
     }
 
 
+    // Défaut
+
     return "carton";
 
 }
 
 
-// =====================================================
-// EXTRAIRE POIDS DU DIAGNOSTIC WORKER
-// =====================================================
+// ==========================================
+// EXTRAIRE LE MEILLEUR POIDS DU DIAGNOSTIC
+// ==========================================
 
-function extrairePoidsDiagnostic(diagnostic) {
+function extrairePoidsDiagnostic(
+    diagnostic
+) {
 
-    if (!Array.isArray(diagnostic)) {
+    if (
+        !Array.isArray(diagnostic)
+    ) {
         return null;
     }
 
@@ -643,63 +677,89 @@ function extrairePoidsDiagnostic(diagnostic) {
     const candidats = [];
 
 
-    diagnostic.forEach(function(item) {
+    diagnostic.forEach(
+        function(item) {
 
-        if (!item) {
-            return;
+            if (!item) {
+                return;
+            }
+
+
+            const poidsTrouve =
+                parseFloat(
+                    item.poids_trouve
+                );
+
+
+            if (
+                Number.isFinite(poidsTrouve) &&
+                poidsTrouve > 0
+            ) {
+
+                candidats.push({
+
+                    poids: poidsTrouve,
+
+                    produitTrouve:
+                        item.produit_trouve === true,
+
+                    numero:
+                        item.numero || 999
+
+                });
+
+            }
+
         }
+    );
 
 
-        const valeur =
-            parseFloat(item.poids_trouve);
+    if (
+        candidats.length === 0
+    ) {
 
-
-        if (
-            Number.isFinite(valeur) &&
-            valeur > 0
-        ) {
-
-            candidats.push({
-
-                poids: valeur,
-
-                produitTrouve:
-                    item.produit_trouve === true,
-
-                numero:
-                    item.numero || 999
-
-            });
-
-        }
-
-    });
-
-
-    if (candidats.length === 0) {
         return null;
+
     }
 
 
-    candidats.sort(function(a, b) {
+    candidats.sort(
+        function(a, b) {
 
-        if (
-            a.produitTrouve &&
-            !b.produitTrouve
-        ) {
-            return -1;
+            function score(x) {
+
+                let valeur = 0;
+
+                if (x.produitTrouve) {
+                    valeur += 10;
+                }
+
+                return valeur;
+
+            }
+
+
+            const difference =
+                score(b) -
+                score(a);
+
+
+            if (
+                difference !== 0
+            ) {
+
+                return difference;
+
+            }
+
+
+            return (
+                a.numero -
+                b.numero
+            );
+
         }
-
-        if (
-            !a.produitTrouve &&
-            b.produitTrouve
-        ) {
-            return 1;
-        }
-
-        return a.numero - b.numero;
-
-    });
+    );
 
 
     return candidats[0].poids;
@@ -707,18 +767,24 @@ function extrairePoidsDiagnostic(diagnostic) {
 }
 
 
-// =====================================================
+// ==========================================
 // EXTRAIRE SOURCE DU DIAGNOSTIC
-// =====================================================
+// ==========================================
 
-function extraireSourceDiagnostic(diagnostic) {
+function extraireSourceDiagnostic(
+    diagnostic
+) {
 
-    if (!Array.isArray(diagnostic)) {
+    if (
+        !Array.isArray(diagnostic)
+    ) {
         return null;
     }
 
 
-    for (const item of diagnostic) {
+    for (
+        const item of diagnostic
+    ) {
 
         if (!item) {
             continue;
@@ -727,11 +793,14 @@ function extraireSourceDiagnostic(diagnostic) {
 
         if (
             item.poids_trouve !== null &&
-            item.poids_trouve !== undefined &&
-            item.url
+            item.poids_trouve !== undefined
         ) {
 
-            return item.url;
+            if (item.url) {
+
+                return item.url;
+
+            }
 
         }
 
@@ -743,946 +812,163 @@ function extraireSourceDiagnostic(diagnostic) {
 }
 
 
-// =====================================================
-// AFFICHER INFORMATIONS PRODUIT
-// =====================================================
+// ==========================================
+// BOUTON CALCULER
+// ==========================================
 
-function afficherEtatProduit(message) {
+if (boutonCalculer) {
 
-    const element =
-        document.getElementById(
-            "etat-recherche-produit"
-        );
-
-    if (element) {
-        element.textContent = message;
-    }
-
-}
-
-
-// =====================================================
-// 🔎 RECHERCHE PRODUIT PAR TEXTE
-// =====================================================
-
-async function rechercherProduit() {
-
-    const rechercheProduit =
-        document.getElementById(
-            "recherche-produit"
-        );
-
-    const sourceProduit =
-        document.getElementById(
-            "source-produit"
-        );
-
-    const poidsRecherche =
-        document.getElementById(
-            "poids-recherche"
-        );
-
-    const dimensionsRecherche =
-        document.getElementById(
-            "dimensions-recherche"
-        );
-
-    const poidsFacturableRecherche =
-        document.getElementById(
-            "poids-facturable-recherche"
-        );
-
-    const produitRechercheAffiche =
-        document.getElementById(
-            "produit-recherche-info"
-        );
-
-    const modeleAffiche =
-        document.getElementById(
-            "modele-recherche-info"
-        );
-
-    const statutAffiche =
-        document.getElementById(
-            "statut-recherche-info"
-        );
-
-
-    const texteRecherche =
-        rechercheProduit
-            ? rechercheProduit.value.trim()
-            : "";
-
-
-    // -----------------------------------------
-    // AUCUNE RECHERCHE
-    // -----------------------------------------
-
-    if (!texteRecherche) {
-
-        afficherEtatProduit(
-            "⚠️ Veuillez indiquer un produit ou un lien."
-        );
-
-        if (sourceProduit) {
-            sourceProduit.textContent =
-                "🌐 Source : Aucune recherche";
-        }
-
-        if (poidsRecherche) {
-            poidsRecherche.textContent =
-                "⚖️ Poids réel trouvé : Non disponible";
-        }
-
-        if (dimensionsRecherche) {
-            dimensionsRecherche.textContent =
-                "📏 Dimensions trouvées : Non disponibles";
-        }
-
-        if (poidsFacturableRecherche) {
-            poidsFacturableRecherche.textContent =
-                "💰 Poids facturable : Non calculable";
-        }
-
-        return;
-
-    }
-
-
-    // -----------------------------------------
-    // AFFICHAGE RECHERCHE EN COURS
-    // -----------------------------------------
-
-    if (produitRechercheAffiche) {
-
-        produitRechercheAffiche.textContent =
-            "📦 Produit recherché : " +
-            texteRecherche;
-
-    }
-
-
-    afficherEtatProduit(
-        "🔎 Recherche en cours..."
-    );
-
-
-    if (sourceProduit) {
-        sourceProduit.textContent =
-            "🌐 Source : Recherche en cours...";
-    }
-
-
-    // -----------------------------------------
-    // URL WORKER
-    // -----------------------------------------
-
-    const urlAPI =
-        URL_WORKER +
-        "?produit=" +
-        encodeURIComponent(
-            texteRecherche
-        );
-
-
-    console.log(
-        "========================================"
-    );
-
-    console.log(
-        "🔎 RECHERCHE PRODUIT :",
-        texteRecherche
-    );
-
-    console.log(
-        "🌐 URL WORKER :",
-        urlAPI
-    );
-
-    console.log(
-        "========================================"
-    );
-
-
-    try {
-
-        const response =
-            await fetch(
-                urlAPI,
-                {
-                    method: "GET",
-                    cache: "no-store"
-                }
-            );
-
-
-        if (!response.ok) {
-
-            throw new Error(
-                "Erreur HTTP " +
-                response.status
-            );
-
-        }
-
-
-        const donnees =
-            await response.json();
-
-
-        console.log(
-            "📥 RÉPONSE WORKER :",
-            donnees
-        );
-
-
-        if (!donnees.succes) {
-
-            throw new Error(
-                donnees.message ||
-                "La recherche n'a pas abouti."
-            );
-
-        }
-
-
-        // -----------------------------------------
-        // SOURCE
-        // -----------------------------------------
-
-        let sourceFinale =
-            donnees.source ||
-            extraireSourceDiagnostic(
-                donnees.diagnostic
-            );
-
-
-        if (sourceProduit) {
-
-            sourceProduit.textContent =
-                "🌐 Source : " +
-                (
-                    sourceFinale ||
-                    "Non disponible"
-                );
-
-        }
-
-
-        // -----------------------------------------
-        // PRODUIT
-        // -----------------------------------------
-
-        if (produitRechercheAffiche) {
-
-            produitRechercheAffiche.textContent =
-                "📦 Produit recherché : " +
-                (
-                    donnees.produit ||
-                    texteRecherche
-                );
-
-        }
-
-
-        // -----------------------------------------
-        // MODÈLE
-        // -----------------------------------------
-
-        if (modeleAffiche) {
-
-            modeleAffiche.textContent =
-                "🏷️ Modèle : " +
-                (
-                    donnees.modele ||
-                    "—"
-                );
-
-        }
-
-
-        // -----------------------------------------
-        // POIDS
-        // -----------------------------------------
-
-        let poidsTrouve = null;
-
-
-        if (
-            donnees.poids_reel !== null &&
-            donnees.poids_reel !== undefined
-        ) {
-
-            const valeur =
-                parseFloat(
-                    donnees.poids_reel
-                );
-
-
-            if (
-                Number.isFinite(valeur) &&
-                valeur > 0
-            ) {
-
-                poidsTrouve =
-                    valeur;
-
-            }
-
-        }
-
-
-        if (poidsTrouve === null) {
-
-            poidsTrouve =
-                extrairePoidsDiagnostic(
-                    donnees.diagnostic
-                );
-
-        }
-
-
-        if (poidsTrouve !== null) {
-
-            if (poidsRecherche) {
-
-                poidsRecherche.textContent =
-                    "⚖️ Poids réel trouvé : " +
-                    poidsTrouve.toFixed(3) +
-                    " kg";
-
-            }
-
-
-            if (poids) {
-                poids.value =
-                    poidsTrouve;
-            }
-
-        } else {
-
-            if (poidsRecherche) {
-
-                poidsRecherche.textContent =
-                    "⚖️ Poids réel trouvé : Non disponible";
-
-            }
-
-        }
-
-
-        // -----------------------------------------
-        // DIMENSIONS
-        // -----------------------------------------
-
-        let dimensionsTrouvees =
-            false;
-
-
-        if (donnees.dimensions) {
-
-            const h =
-                parseFloat(
-                    donnees.dimensions.hauteur_cm
-                );
-
-            const lo =
-                parseFloat(
-                    donnees.dimensions.longueur_cm
-                );
-
-            const la =
-                parseFloat(
-                    donnees.dimensions.largeur_cm
-                );
-
-
-            if (
-                Number.isFinite(h) &&
-                Number.isFinite(lo) &&
-                Number.isFinite(la) &&
-                h > 0 &&
-                lo > 0 &&
-                la > 0
-            ) {
-
-                dimensionsTrouvees =
-                    true;
-
-
-                if (dimensionsRecherche) {
-
-                    dimensionsRecherche.textContent =
-                        "📏 Dimensions trouvées : " +
-                        h.toFixed(2) +
-                        " × " +
-                        lo.toFixed(2) +
-                        " × " +
-                        la.toFixed(2) +
-                        " cm";
-
-                }
-
-
-                if (hauteur) {
-                    hauteur.value = h;
-                }
-
-                if (longueur) {
-                    longueur.value = lo;
-                }
-
-                if (largeur) {
-                    largeur.value = la;
-                }
-
-            }
-
-        }
-
-
-        if (
-            !dimensionsTrouvees &&
-            dimensionsRecherche
-        ) {
-
-            dimensionsRecherche.textContent =
-                "📏 Dimensions trouvées : Non disponibles";
-
-        }
-
-
-        // -----------------------------------------
-        // EMBALLAGE AUTOMATIQUE
-        // -----------------------------------------
-
-        const typeDetecte =
-            detecterEmballageAutomatique(
-                texteRecherche
-            );
-
-
-        let emballageFinal =
-            typeDetecte;
-
-
-        // Si l'utilisateur a choisi manuellement
-        // un emballage différent de "auto",
-        // on respecte son choix.
-
-        if (
-            choixEmballage &&
-            choixEmballage.value &&
-            choixEmballage.value !== "auto"
-        ) {
-
-            emballageFinal =
-                choixEmballage.value;
-
-        }
-
-
-        window.typeEmballageAuto =
-            emballageFinal;
-
-
-        // -----------------------------------------
-        // AFFICHER EMBALLAGE
-        // -----------------------------------------
-
-        calculerInformationsEmballage(
-            emballageFinal
-        );
-
-
-        // -----------------------------------------
-        // POIDS FACTURABLE
-        // -----------------------------------------
-
-        if (
-            poidsTrouve !== null &&
-            hauteur &&
-            longueur &&
-            largeur &&
-            parseFloat(hauteur.value) > 0 &&
-            parseFloat(longueur.value) > 0 &&
-            parseFloat(largeur.value) > 0
-        ) {
-
-            const poidsFacturable =
-                calculerPoidsFacturable(
-                    emballageFinal
-                );
-
-
-            if (poidsFacturableRecherche) {
-
-                poidsFacturableRecherche.textContent =
-                    "💰 Poids facturable : " +
-                    poidsFacturable.toFixed(3) +
-                    " kg";
-
-            }
-
-        } else {
-
-            if (poidsFacturableRecherche) {
-
-                poidsFacturableRecherche.textContent =
-                    "💰 Poids facturable : Non calculable";
-
-            }
-
-        }
-
-
-        // -----------------------------------------
-        // STATUT
-        // -----------------------------------------
-
-        if (statutAffiche) {
-
-            statutAffiche.textContent =
-                "ℹ️ Statut : " +
-                (
-                    donnees.statut ||
-                    (
-                        poidsTrouve !== null
-                            ? "Informations trouvées"
-                            : "Poids non trouvé"
-                    )
-                );
-
-        }
-
-
-        // -----------------------------------------
-        // ÉTAT FINAL
-        // -----------------------------------------
-
-        if (poidsTrouve !== null) {
-
-            afficherEtatProduit(
-                "✅ Recherche effectuée pour : " +
-                texteRecherche
-            );
-
-        } else {
-
-            afficherEtatProduit(
-                "⚠️ Produit trouvé, mais poids non disponible."
-            );
-
-        }
-
-
-        console.log(
-            "⚖️ POIDS FINAL :",
-            poidsTrouve
-        );
-
-        console.log(
-            "📦 EMBALLAGE FINAL :",
-            emballageFinal
-        );
-
-        console.log(
-            "🌐 SOURCE FINALE :",
-            sourceFinale
-        );
-
-
-    }
-    catch (erreur) {
-
-        console.error(
-            "❌ ERREUR RECHERCHE PRODUIT :",
-            erreur
-        );
-
-
-        if (sourceProduit) {
-
-            sourceProduit.textContent =
-                "🌐 Source : Erreur";
-
-        }
-
-
-        if (poidsRecherche) {
-
-            poidsRecherche.textContent =
-                "⚖️ Poids réel trouvé : Non disponible";
-
-        }
-
-
-        if (dimensionsRecherche) {
-
-            dimensionsRecherche.textContent =
-                "📏 Dimensions trouvées : Non disponibles";
-
-        }
-
-
-        if (poidsFacturableRecherche) {
-
-            poidsFacturableRecherche.textContent =
-                "💰 Poids facturable : Non calculable";
-
-        }
-
-
-        afficherEtatProduit(
-            "❌ Impossible d'effectuer la recherche."
-        );
-
-    }
-
-}
-
-
-// =====================================================
-// 🔎 BOUTON RECHERCHER
-// =====================================================
-
-const btnRechercheProduit =
-    document.getElementById(
-        "btnRechercheProduit"
-    );
-
-
-if (btnRechercheProduit) {
-
-    btnRechercheProduit.addEventListener(
+    boutonCalculer.addEventListener(
         "click",
-        function(event) {
-
-            event.preventDefault();
-
-            rechercherProduit();
-
-        }
-    );
-
-}
-
-
-// =====================================================
-// 📷 CAPTURE PRODUIT
-// =====================================================
-// Cette partie fait uniquement :
-// - sélection de l'image
-// - aperçu
-// - suppression
-// - préparation pour une future analyse
-//
-// Elle ne fait PAS encore d'OCR.
-// =====================================================
-
-const inputCaptureProduit =
-    document.getElementById(
-        "capture-produit"
-    );
-
-const zoneApercuCapture =
-    document.getElementById(
-        "apercu-capture"
-    );
-
-
-let captureProduitSelectionnee =
-    null;
-
-
-if (
-    inputCaptureProduit &&
-    zoneApercuCapture
-) {
-
-    inputCaptureProduit.addEventListener(
-        "change",
         function() {
 
-            const fichier =
-                this.files &&
-                this.files[0];
+            const H =
+                parseFloat(
+                    hauteur?.value
+                );
+
+            const L =
+                parseFloat(
+                    longueur?.value
+                );
+
+            const l =
+                parseFloat(
+                    largeur?.value
+                );
+
+            const P =
+                parseFloat(
+                    poids?.value
+                );
+
+            const prix =
+                parseFloat(
+                    prixYuan?.value
+                );
 
 
-            if (!fichier) {
-
-                return;
-
-            }
-
-
-            // -----------------------------------------
-            // VÉRIFICATION IMAGE
-            // -----------------------------------------
+            // Vérification dimensions
 
             if (
-                !fichier.type ||
-                !fichier.type.startsWith(
-                    "image/"
-                )
+                !H ||
+                H <= 0 ||
+                !L ||
+                L <= 0 ||
+                !l ||
+                l <= 0
             ) {
 
-                zoneApercuCapture.innerHTML =
-                    "<p>❌ Veuillez sélectionner une image.</p>";
+                if (resultats) {
 
-                this.value = "";
-
-                captureProduitSelectionnee =
-                    null;
-
-                return;
-
-            }
-
-
-            // -----------------------------------------
-            // MÉMORISATION POUR FUTURE ANALYSE
-            // -----------------------------------------
-
-            captureProduitSelectionnee =
-                fichier;
-
-
-            // -----------------------------------------
-            // LECTURE IMAGE
-            // -----------------------------------------
-
-            const lecteur =
-                new FileReader();
-
-
-            lecteur.onload =
-                function(event) {
-
-                    zoneApercuCapture.innerHTML = `
-
-                        <div class="cadre-apercu-capture">
-
-                            <p>
-                                📸 Capture sélectionnée :
-                            </p>
-
-                            <img
-                                src="${event.target.result}"
-                                alt="Aperçu de la capture du produit"
-                                style="
-                                    max-width:100%;
-                                    height:auto;
-                                    display:block;
-                                    margin:10px auto;
-                                    border-radius:10px;
-                                "
-                            >
-
-                            <button
-                                type="button"
-                                id="supprimer-capture">
-
-                                🗑️ SUPPRIMER LA CAPTURE
-
-                            </button>
-
-                        </div>
-
+                    resultats.innerHTML = `
+                        <p>
+                            ⚠️ <strong>
+                            Veuillez renseigner correctement
+                            la hauteur, la longueur
+                            et la largeur.
+                            </strong>
+                        </p>
                     `;
 
+                }
 
-                    // -----------------------------------------
-                    // BOUTON SUPPRIMER
-                    // -----------------------------------------
-
-                    const boutonSupprimer =
-                        document.getElementById(
-                            "supprimer-capture"
-                        );
-
-
-                    if (boutonSupprimer) {
-
-                        boutonSupprimer.addEventListener(
-                            "click",
-                            function() {
-
-                                inputCaptureProduit.value =
-                                    "";
-
-                                zoneApercuCapture.innerHTML =
-                                    "";
-
-                                captureProduitSelectionnee =
-                                    null;
-
-                                afficherEtatProduit(
-                                    "ℹ️ Capture supprimée."
-                                );
-
-                            }
-                        );
-
-                    }
-
-
-                    // -----------------------------------------
-                    // ÉTAT
-                    // -----------------------------------------
-
-                    afficherEtatProduit(
-                        "📷 Capture ajoutée. Analyse de capture prête pour l'étape suivante."
-                    );
-
-
-                    console.log(
-                        "📷 CAPTURE PRODUIT PRÊTE POUR ANALYSE :",
-                        fichier.name
-                    );
-
-                };
-
-
-            lecteur.onerror =
-                function() {
-
-                    zoneApercuCapture.innerHTML =
-                        "<p>❌ Impossible de lire l'image.</p>";
-
-                    captureProduitSelectionnee =
-                        null;
-
-                };
-
-
-            lecteur.readAsDataURL(
-                fichier
-            );
-
-        }
-    );
-
-}
-
-
-// =====================================================
-// 🔬 PRÉPARATION FUTURE DE L'ANALYSE DE CAPTURE
-// =====================================================
-// Cette fonction sera utilisée plus tard pour :
-//
-// Capture
-// ↓
-// lecture du texte
-// ↓
-// nom du produit
-// ↓
-// modèle
-// ↓
-// pointure
-// ↓
-// recherche Worker
-//
-// Pour l'instant elle ne lance aucune analyse.
-// =====================================================
-
-async function analyserCaptureProduit() {
-
-    if (
-        !captureProduitSelectionnee
-    ) {
-
-        afficherEtatProduit(
-            "⚠️ Aucune capture sélectionnée."
-        );
-
-        return null;
-
-    }
-
-
-    console.log(
-        "🔬 Analyse de capture prête :",
-        captureProduitSelectionnee.name
-    );
-
-
-    return {
-
-        fichier:
-            captureProduitSelectionnee,
-
-        nom:
-            null,
-
-        modele:
-            null,
-
-        pointure:
-            null,
-
-        texte:
-            null
-
-    };
-
-}
-
-
-// =====================================================
-// 📦 CHANGEMENT MANUEL EMBALLAGE
-// =====================================================
-
-if (choixEmballage) {
-
-    choixEmballage.addEventListener(
-        "change",
-        function() {
-
-            let emballageChoisi =
-                choixEmballage.value;
-
-
-            if (
-                emballageChoisi === "auto"
-            ) {
-
-                emballageChoisi =
-                    window.typeEmballageAuto ||
-                    "carton";
+                return;
 
             }
 
 
-            window.typeEmballageAuto =
-                emballageChoisi;
+            // Vérification poids avion
+
+            if (
+                transport &&
+                transport.value === "avion" &&
+                (!P || P <= 0)
+            ) {
+
+                if (resultats) {
+
+                    resultats.innerHTML = `
+                        <p>
+                            ⚠️ <strong>
+                            Veuillez renseigner
+                            le poids réel.
+                            </strong>
+                        </p>
+                    `;
+
+                }
+
+                return;
+
+            }
 
 
-            calculerInformationsEmballage(
-                emballageChoisi
-            );
+            // Vérification prix
+
+            if (
+                !prix ||
+                prix < 0
+            ) {
+
+                if (resultats) {
+
+                    resultats.innerHTML = `
+                        <p>
+                            ⚠️ <strong>
+                            Veuillez renseigner
+                            le prix de la marchandise
+                            en Yuan.
+                            </strong>
+                        </p>
+                    `;
+
+                }
+
+                return;
+
+            }
 
 
-            const poidsFacturable =
-                calculerPoidsFacturable(
-                    emballageChoisi
-                );
+            const montantYuan =
+                parseFloat(
+                    prixYuan?.value
+                ) || 0;
 
 
-            const poidsFacturableRecherche =
-                document.getElementById(
-                    "poids-facturable-recherche"
-                );
+            const tauxYuanUtilise =
+                parseFloat(
+                    tauxYuan?.value
+                ) ||
+                TAUX_YUAN_AR_DEFAUT;
+
+
+            const montantMarchandiseAR =
+                montantYuan *
+                tauxYuanUtilise;
 
 
             if (
-                poidsFacturableRecherche
+                transport &&
+                transport.value === "avion"
             ) {
 
-                poidsFacturableRecherche.textContent =
-                    "💰 Poids facturable : " +
-                    poidsFacturable.toFixed(3) +
-                    " kg";
+                calculerAvion(
+                    montantYuan,
+                    montantMarchandiseAR
+                );
+
+            }
+
+            else if (
+                transport &&
+                transport.value === "maritime"
+            ) {
+
+                calculerMaritime(
+                    montantYuan,
+                    montantMarchandiseAR
+                );
 
             }
 
@@ -1692,9 +978,9 @@ if (choixEmballage) {
 }
 
 
-// =====================================================
-// ✈️ CALCUL AVION
-// =====================================================
+// ==========================================
+// CALCUL AVION
+// ==========================================
 
 function calculerAvion(
     montantYuan,
@@ -1707,14 +993,14 @@ function calculerAvion(
         ) || 0;
 
 
-    const typeEmballage =
+    const typeEmballageAuto =
         window.typeEmballageAuto ||
         "carton";
 
 
     const poidsEmballage =
         obtenirPoidsEmballage(
-            typeEmballage
+            typeEmballageAuto
         );
 
 
@@ -1725,7 +1011,7 @@ function calculerAvion(
 
     const poidsVolumetrique =
         calculerPoidsVolumetrique(
-            typeEmballage
+            typeEmballageAuto
         );
 
 
@@ -1737,20 +1023,17 @@ function calculerAvion(
 
 
     let tarif = 0;
-
     let nomTarif = "";
-
     let jourDepart = "";
-
     let delai = "";
 
 
     if (
-        marchandise.value === "general"
+        marchandise?.value === "general"
     ) {
 
         if (
-            service.value === "express"
+            service?.value === "express"
         ) {
 
             tarif =
@@ -1765,7 +1048,9 @@ function calculerAvion(
             delai =
                 "3 à 5 jours";
 
-        } else {
+        }
+
+        else {
 
             tarif =
                 TARIFS_AVION.general_normal;
@@ -1783,9 +1068,8 @@ function calculerAvion(
 
     }
 
-
     else if (
-        marchandise.value === "batterie"
+        marchandise?.value === "batterie"
     ) {
 
         tarif =
@@ -1802,9 +1086,8 @@ function calculerAvion(
 
     }
 
-
     else if (
-        marchandise.value === "poudre"
+        marchandise?.value === "poudre"
     ) {
 
         tarif =
@@ -1851,14 +1134,21 @@ function calculerAvion(
         </p>
 
         <p>
-            ⚖️ Poids réel :
+            ⚖️ Poids réel produit :
             <strong>
-                ${poidsReel.toFixed(3)} kg
+                ${poidsProduit.toFixed(3)} kg
             </strong>
         </p>
 
         <p>
-            📦 Poids volumétrique :
+            📦 Poids emballage :
+            <strong>
+                ${poidsEmballage.toFixed(3)} kg
+            </strong>
+        </p>
+
+        <p>
+            📐 Poids volumétrique :
             <strong>
                 ${poidsVolumetrique.toFixed(3)} kg
             </strong>
@@ -1874,16 +1164,14 @@ function calculerAvion(
         <p>
             💵 Tarif :
             <strong>
-                ${tarif.toLocaleString("fr-FR")}
-                AR/kg
+                ${tarif.toLocaleString("fr-FR")} AR/kg
             </strong>
         </p>
 
         <p>
-            🚚 Frais de transport :
+            ✈️ Transport :
             <strong>
-                ${fraisTransport.toLocaleString("fr-FR")}
-                AR
+                ${fraisTransport.toLocaleString("fr-FR")} AR
             </strong>
         </p>
 
@@ -1892,16 +1180,14 @@ function calculerAvion(
         <p>
             💴 Prix marchandise :
             <strong>
-                ${montantYuan.toLocaleString("fr-FR")}
-                Yuan
+                ${montantYuan.toLocaleString("fr-FR")} Yuan
             </strong>
         </p>
 
         <p>
             💰 Valeur marchandise :
             <strong>
-                ${montantMarchandiseAR.toLocaleString("fr-FR")}
-                AR
+                ${montantMarchandiseAR.toLocaleString("fr-FR")} AR
             </strong>
         </p>
 
@@ -1910,8 +1196,7 @@ function calculerAvion(
         <p>
             🧾 TOTAL :
             <strong>
-                ${total.toLocaleString("fr-FR")}
-                AR
+                ${total.toLocaleString("fr-FR")} AR
             </strong>
         </p>
 
@@ -1934,9 +1219,9 @@ function calculerAvion(
 }
 
 
-// =====================================================
-// 🚢 CALCUL MARITIME
-// =====================================================
+// ==========================================
+// CALCUL MARITIME
+// ==========================================
 
 function calculerMaritime(
     montantYuan,
@@ -1948,25 +1233,11 @@ function calculerMaritime(
 
 
     let tarif = 0;
-
     let nomTarif = "";
 
 
     if (
-        marchandise.value === "general"
-    ) {
-
-        tarif =
-            TARIFS_MARITIME.general;
-
-        nomTarif =
-            "Marchandise générale";
-
-    }
-
-
-    else if (
-        marchandise.value === "batterie"
+        marchandise?.value === "batterie"
     ) {
 
         tarif =
@@ -1977,20 +1248,13 @@ function calculerMaritime(
 
     }
 
-
     else {
 
-        resultats.innerHTML = `
+        tarif =
+            TARIFS_MARITIME.general;
 
-            <p>
-                ⚠️ Cette marchandise
-                n'est pas disponible
-                en transport maritime.
-            </p>
-
-        `;
-
-        return;
+        nomTarif =
+            "Marchandise générale";
 
     }
 
@@ -1998,24 +1262,33 @@ function calculerMaritime(
     const tauxDollarUtilise =
         parseFloat(
             tauxDollar?.value
-        ) || 0;
+        );
 
 
     if (
+        !tauxDollarUtilise ||
         tauxDollarUtilise <= 0
     ) {
 
-        resultats.innerHTML = `
+        if (resultats) {
 
-            <p>
-                ⚠️ Veuillez saisir le
-                <strong>
-                    taux Dollar → AR
-                </strong>
-                avant de calculer.
-            </p>
+            resultats.innerHTML = `
 
-        `;
+                <h3>
+                    🚢 TRANSPORT : MARITIME
+                </h3>
+
+                <p>
+                    ⚠️ Veuillez saisir le
+                    <strong>
+                        taux Dollar → AR
+                    </strong>
+                    avant de calculer.
+                </p>
+
+            `;
+
+        }
 
         return;
 
@@ -2035,6 +1308,11 @@ function calculerMaritime(
     const total =
         fraisTransportAR +
         montantMarchandiseAR;
+
+
+    if (!resultats) {
+        return;
+    }
 
 
     resultats.innerHTML = `
@@ -2137,587 +1415,88 @@ function calculerMaritime(
 }
 
 
-// =====================================================
-// 🧮 BOUTON CALCULER
-// =====================================================
+// ==========================================
+// INITIALISATION TRANSPORT
+// ==========================================
 
-if (boutonCalculer) {
+if (transport) {
 
-    boutonCalculer.addEventListener(
-        "click",
-        function(event) {
-
-            event.preventDefault();
-
-
-            const H =
-                parseFloat(
-                    hauteur?.value
-                );
-
-            const L =
-                parseFloat(
-                    longueur?.value
-                );
-
-            const l =
-                parseFloat(
-                    largeur?.value
-                );
-
-            const P =
-                parseFloat(
-                    poids?.value
-                );
-
-            const prix =
-                parseFloat(
-                    prixYuan?.value
-                );
-
-
-            // -----------------------------------------
-            // DIMENSIONS
-            // -----------------------------------------
-
-            if (
-                !H ||
-                H <= 0 ||
-                !L ||
-                L <= 0 ||
-                !l ||
-                l <= 0
-            ) {
-
-                resultats.innerHTML = `
-
-                    <p>
-                        ⚠️ <strong>
-                        Veuillez renseigner correctement
-                        la hauteur, la longueur
-                        et la largeur.
-                        </strong>
-                    </p>
-
-                `;
-
-                return;
-
-            }
-
-
-            // -----------------------------------------
-            // POIDS AVION
-            // -----------------------------------------
-
-            if (
-                transport &&
-                transport.value === "avion" &&
-                (!P || P <= 0)
-            ) {
-
-                resultats.innerHTML = `
-
-                    <p>
-                        ⚠️ <strong>
-                        Veuillez renseigner
-                        le poids réel.
-                        </strong>
-                    </p>
-
-                `;
-
-                return;
-
-            }
-
-
-            // -----------------------------------------
-            // PRIX
-            // -----------------------------------------
-
-            if (
-                !Number.isFinite(prix) ||
-                prix < 0
-            ) {
-
-                resultats.innerHTML = `
-
-                    <p>
-                        ⚠️ <strong>
-                        Veuillez renseigner
-                        le prix de la marchandise
-                        en Yuan.
-                        </strong>
-                    </p>
-
-                `;
-
-                return;
-
-            }
-
-
-            const montantYuan =
-                parseFloat(
-                    prixYuan?.value
-                ) || 0;
-
-
-            const tauxYuanUtilise =
-                parseFloat(
-                    tauxYuan?.value
-                ) ||
-                TAUX_YUAN_AR_DEFAUT;
-
-
-            const montantMarchandiseAR =
-                montantYuan *
-                tauxYuanUtilise;
-
-
-            if (
-                transport &&
-                transport.value === "avion"
-            ) {
-
-                calculerAvion(
-                    montantYuan,
-                    montantMarchandiseAR
-                );
-
-            }
-
-
-            else if (
-                transport &&
-                transport.value === "maritime"
-            ) {
-
-                calculerMaritime(
-                    montantYuan,
-                    montantMarchandiseAR
-                );
-
-            }
-
-        }
+    transport.addEventListener(
+        "change",
+        mettreAJourTransport
     );
 
-}
-
-
-// =====================================================
-// 📄 AJOUTER DEVIS
-// =====================================================
-
-function ajouterDevis() {
-
-    const nomProduit =
-        document.getElementById(
-            "nom-produit"
-        );
-
-    const resultatsElement =
-        document.getElementById(
-            "resultats"
-        );
-
-    const listeDevis =
-        document.getElementById(
-            "liste-devis"
-        );
-
-
-    if (
-        !nomProduit ||
-        !nomProduit.value.trim()
-    ) {
-
-        alert(
-            "⚠️ Veuillez renseigner le nom du produit."
-        );
-
-        if (nomProduit) {
-            nomProduit.focus();
-        }
-
-        return;
-
-    }
-
-
-    if (
-        !resultatsElement ||
-        !resultatsElement.innerText.trim()
-    ) {
-
-        alert(
-            "⚠️ Veuillez d'abord effectuer un calcul."
-        );
-
-        return;
-
-    }
-
-
-    if (!listeDevis) {
-        return;
-    }
-
-
-    numeroDevis++;
-
-
-    const dateDevis =
-        new Date().toLocaleDateString(
-            "fr-FR"
-        );
-
-
-    const texteResultat =
-        resultatsElement.innerText
-            .replace(
-                /📅 Départ :[^\n]*/g,
-                ""
-            )
-            .replace(
-                /⏱️ Délai :[^\n]*/g,
-                ""
-            )
-            .replace(
-                /\n{2,}/g,
-                "\n"
-            )
-            .trim();
-
-
-    const nouveauDevis = `
-
-${numeroDevis}) 📦 Nom du produit :
-${nomProduit.value.trim()}
-
-${texteResultat}
-
-`;
-
-
-    if (
-        numeroDevis === 1
-    ) {
-
-        listeDevis.innerText =
-            "════════════════════════════════\n" +
-            "       DEVIS EXPÉDITION\n" +
-            "════════════════════════════════\n\n" +
-            "Date : " +
-            dateDevis +
-            "\n" +
-            nouveauDevis;
-
-    } else {
-
-        listeDevis.innerText +=
-            "\n────────────────────────────────\n" +
-            nouveauDevis;
-
-    }
-
-
-    listeDevis.scrollTop =
-        listeDevis.scrollHeight;
-
-
-    localStorage.setItem(
-        "devisExpedition",
-        listeDevis.innerText
-    );
+    mettreAJourTransport();
 
 }
 
 
-// =====================================================
-// 🗑️ EFFACER DEVIS
-// =====================================================
+// ==========================================
+// CHANGEMENT MANUEL EMBALLAGE
+// ==========================================
 
-function effacerDevis() {
+if (choixEmballage) {
 
-    const listeDevis =
-        document.getElementById(
-            "liste-devis"
-        );
-
-
-    if (
-        !listeDevis ||
-        !listeDevis.innerText.trim()
-    ) {
-
-        alert(
-            "ℹ️ Aucun devis à effacer."
-        );
-
-        return;
-
-    }
-
-
-    if (
-        !confirm(
-            "⚠️ Voulez-vous vraiment effacer tous les devis ?"
-        )
-    ) {
-
-        return;
-
-    }
-
-
-    listeDevis.innerText =
-        "";
-
-    numeroDevis =
-        0;
-
-
-    localStorage.removeItem(
-        "devisExpedition"
-    );
-
-}
-
-
-// =====================================================
-// 📋 COPIER DEVIS
-// =====================================================
-
-async function copierDevis() {
-
-    const listeDevis =
-        document.getElementById(
-            "liste-devis"
-        );
-
-
-    if (
-        !listeDevis ||
-        !listeDevis.innerText.trim()
-    ) {
-
-        alert(
-            "ℹ️ Aucun devis à copier."
-        );
-
-        return;
-
-    }
-
-
-    try {
-
-        await navigator.clipboard.writeText(
-            listeDevis.innerText.trim()
-        );
-
-
-        alert(
-            "✅ Tous les devis ont été copiés."
-        );
-
-    }
-    catch (erreur) {
-
-        console.error(
-            erreur
-        );
-
-        alert(
-            "⚠️ Impossible de copier les devis."
-        );
-
-    }
-
-}
-
-
-// =====================================================
-// 🖨️ IMPRIMER DEVIS
-// =====================================================
-
-function imprimerDevis() {
-
-    const listeDevis =
-        document.getElementById(
-            "liste-devis"
-        );
-
-
-    if (
-        !listeDevis ||
-        !listeDevis.innerText.trim()
-    ) {
-
-        alert(
-            "ℹ️ Aucun devis à imprimer."
-        );
-
-        return;
-
-    }
-
-
-    const contenuDevis =
-        listeDevis.innerText.trim();
-
-
-    const fenetreImpression =
-        window.open(
-            "",
-            "_blank",
-            "width=800,height=600"
-        );
-
-
-    if (!fenetreImpression) {
-
-        alert(
-            "⚠️ La fenêtre d'impression a été bloquée par le navigateur."
-        );
-
-        return;
-
-    }
-
-
-    fenetreImpression.document.write(`
-
-        <!DOCTYPE html>
-
-        <html lang="fr">
-
-        <head>
-
-            <meta charset="UTF-8">
-
-            <title>Devis</title>
-
-            <style>
-
-                body {
-
-                    font-family:
-                        "Courier New",
-                        monospace;
-
-                    font-size: 14px;
-
-                    line-height: 1.4;
-
-                    white-space: pre-wrap;
-
-                    padding: 30px;
-
-                }
-
-            </style>
-
-        </head>
-
-        <body>
-
-            <div>
-                ${contenuDevis}
-            </div>
-
-        </body>
-
-        </html>
-
-    `);
-
-
-    fenetreImpression.document.close();
-
-    fenetreImpression.focus();
-
-
-    setTimeout(
+    choixEmballage.addEventListener(
+        "change",
         function() {
 
-            fenetreImpression.print();
+            let emballageChoisi =
+                choixEmballage.value;
 
-        },
-        300
+
+            if (
+                emballageChoisi === "auto"
+            ) {
+
+                emballageChoisi =
+                    window.typeEmballageAuto ||
+                    "carton";
+
+            }
+
+
+            window.typeEmballageAuto =
+                emballageChoisi;
+
+
+            calculerInformationsEmballage(
+                emballageChoisi
+            );
+
+
+            const poidsFacturable =
+                calculerPoidsFacturable(
+                    emballageChoisi
+                );
+
+
+            const poidsFacturableRecherche =
+                document.getElementById(
+                    "poids-facturable-recherche"
+                );
+
+
+            if (
+                poidsFacturableRecherche
+            ) {
+
+                poidsFacturableRecherche.textContent =
+                    "💰 Poids facturable : " +
+                    poidsFacturable.toFixed(3) +
+                    " kg";
+
+            }
+
+        }
     );
 
 }
 
 
-// =====================================================
-// 📄 AFFICHER / MASQUER DEVIS
-// =====================================================
-
-function afficherMasquerDevis() {
-
-    const blocDevis =
-        document.getElementById(
-            "bloc-devis"
-        );
-
-    const boutonDevis =
-        document.getElementById(
-            "btnAfficherDevis"
-        );
-
-
-    if (!blocDevis) {
-        return;
-    }
-
-
-    if (
-        blocDevis.style.display === "none"
-    ) {
-
-        blocDevis.style.display =
-            "block";
-
-
-        if (boutonDevis) {
-
-            boutonDevis.innerHTML =
-                "📄 MASQUER LES DEVIS";
-
-        }
-
-
-        blocDevis.scrollIntoView({
-            behavior: "smooth",
-            block: "start"
-        });
-
-    }
-    else {
-
-        blocDevis.style.display =
-            "none";
-
-
-        if (boutonDevis) {
-
-            boutonDevis.innerHTML =
-                "📄 DEVIS";
-
-        }
-
-    }
-
-}
-
-
-// =====================================================
-// 🔄 RÉINITIALISER
-// =====================================================
+// ==========================================
+// RÉINITIALISER
+// ==========================================
 
 function reinitialiser() {
 
@@ -2787,72 +1566,469 @@ function reinitialiser() {
     }
 
 
-    const apercuCapture =
+    const apercuCaptureReset =
         document.getElementById(
             "apercu-capture"
         );
 
 
-    if (apercuCapture) {
-        apercuCapture.innerHTML = "";
+    if (apercuCaptureReset) {
+        apercuCaptureReset.innerHTML = "";
     }
 
 
-    const captureProduit =
+    const captureProduitReset =
         document.getElementById(
             "capture-produit"
         );
 
 
-    if (captureProduit) {
-        captureProduit.value = "";
+    if (captureProduitReset) {
+        captureProduitReset.value = "";
     }
 
 
-    captureProduitSelectionnee =
-        null;
+    const etatRechercheProduitReset =
+        document.getElementById(
+            "etat-recherche-produit"
+        );
 
 
-    const elementsInformations = [
+    if (etatRechercheProduitReset) {
+        etatRechercheProduitReset.textContent = "";
+    }
 
-        "source-produit",
-        "poids-recherche",
-        "dimensions-recherche",
-        "poids-facturable-recherche",
-        "produit-recherche-info",
-        "modele-recherche-info",
-        "statut-recherche-info"
-
-    ];
+}
 
 
-    elementsInformations.forEach(
-        function(id) {
+// ==========================================
+// NUMÉRO DE DEVIS
+// ==========================================
 
-            const element =
-                document.getElementById(id);
+let numeroDevis = 0;
 
-            if (element) {
 
-                element.textContent =
-                    "—";
+// ==========================================
+// AJOUTER UN DEVIS
+// ==========================================
 
-            }
+function ajouterDevis() {
 
+    const nomProduit =
+        document.getElementById(
+            "nom-produit"
+        );
+
+    const resultatsElement =
+        document.getElementById(
+            "resultats"
+        );
+
+    const listeDevis =
+        document.getElementById(
+            "liste-devis"
+        );
+
+
+    if (
+        !nomProduit ||
+        !nomProduit.value.trim()
+    ) {
+
+        alert(
+            "⚠️ Veuillez renseigner le nom du produit."
+        );
+
+        if (nomProduit) {
+            nomProduit.focus();
         }
-    );
+
+        return;
+
+    }
 
 
-    afficherEtatProduit(
-        ""
+    if (
+        !resultatsElement ||
+        !resultatsElement.innerText.trim()
+    ) {
+
+        alert(
+            "⚠️ Veuillez d'abord effectuer un calcul."
+        );
+
+        return;
+
+    }
+
+
+    if (!listeDevis) {
+        return;
+    }
+
+
+    numeroDevis++;
+
+
+    const maintenant =
+        new Date();
+
+
+    const dateDevis =
+        maintenant.toLocaleDateString(
+            "fr-FR"
+        );
+
+
+    const texteResultat =
+        resultatsElement.innerText
+            .replace(
+                /📅 Départ :[^\n]*/g,
+                ""
+            )
+            .replace(
+                /⏱️ Délai :[^\n]*/g,
+                ""
+            )
+            .replace(
+                /\n{2,}/g,
+                "\n"
+            )
+            .trim();
+
+
+    if (
+        numeroDevis === 1
+    ) {
+
+        listeDevis.innerText =
+            `════════════════════════════════
+DEVIS EXPÉDITION
+════════════════════════════════
+
+Date : ${dateDevis}
+
+1) 📦 Nom du produit :
+${nomProduit.value.trim()}
+
+${texteResultat}
+
+`;
+
+    }
+
+    else {
+
+        listeDevis.innerText +=
+            `
+────────────────────────────────
+
+${numeroDevis}) 📦 Nom du produit :
+${nomProduit.value.trim()}
+
+${texteResultat}
+
+`;
+
+    }
+
+
+    listeDevis.scrollTop =
+        listeDevis.scrollHeight;
+
+
+    localStorage.setItem(
+        "devisExpedition",
+        listeDevis.innerText
     );
 
 }
 
 
-// =====================================================
-// 💾 CHARGER LES DEVIS SAUVEGARDÉS
-// =====================================================
+// ==========================================
+// EFFACER DEVIS
+// ==========================================
+
+function effacerDevis() {
+
+    const listeDevis =
+        document.getElementById(
+            "liste-devis"
+        );
+
+
+    if (
+        !listeDevis ||
+        !listeDevis.innerText.trim()
+    ) {
+
+        alert(
+            "ℹ️ Aucun devis à effacer."
+        );
+
+        return;
+
+    }
+
+
+    const confirmation =
+        confirm(
+            "⚠️ Voulez-vous vraiment effacer tous les devis ?"
+        );
+
+
+    if (!confirmation) {
+        return;
+    }
+
+
+    listeDevis.innerText =
+        "";
+
+
+    numeroDevis =
+        0;
+
+
+    localStorage.removeItem(
+        "devisExpedition"
+    );
+
+}
+
+
+// ==========================================
+// COPIER DEVIS
+// ==========================================
+
+async function copierDevis() {
+
+    const listeDevis =
+        document.getElementById(
+            "liste-devis"
+        );
+
+
+    if (
+        !listeDevis ||
+        !listeDevis.innerText.trim()
+    ) {
+
+        alert(
+            "ℹ️ Aucun devis à copier."
+        );
+
+        return;
+
+    }
+
+
+    try {
+
+        await navigator.clipboard.writeText(
+            listeDevis.innerText.trim()
+        );
+
+
+        alert(
+            "✅ Tous les devis ont été copiés."
+        );
+
+    }
+
+    catch (erreur) {
+
+        alert(
+            "⚠️ Impossible de copier les devis."
+        );
+
+        console.error(erreur);
+
+    }
+
+}
+
+
+// ==========================================
+// IMPRIMER DEVIS
+// ==========================================
+
+function imprimerDevis() {
+
+    const listeDevis =
+        document.getElementById(
+            "liste-devis"
+        );
+
+
+    if (
+        !listeDevis ||
+        !listeDevis.innerText.trim()
+    ) {
+
+        alert(
+            "ℹ️ Aucun devis à imprimer."
+        );
+
+        return;
+
+    }
+
+
+    const contenuDevis =
+        listeDevis.innerText.trim();
+
+
+    const fenetreImpression =
+        window.open(
+            "",
+            "_blank",
+            "width=800,height=600"
+        );
+
+
+    if (!fenetreImpression) {
+
+        alert(
+            "⚠️ La fenêtre d'impression a été bloquée par le navigateur."
+        );
+
+        return;
+
+    }
+
+
+    fenetreImpression.document.write(`
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Devis</title>
+
+<style>
+
+body {
+
+    font-family:
+        "Courier New",
+        monospace;
+
+    font-size: 14px;
+
+    line-height: 1.4;
+
+    white-space: pre-wrap;
+
+    padding: 30px;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div>${contenuDevis}</div>
+
+</body>
+
+</html>
+
+`);
+
+
+    fenetreImpression.document.close();
+
+    fenetreImpression.focus();
+
+
+    setTimeout(
+        function() {
+
+            fenetreImpression.print();
+
+        },
+        300
+    );
+
+}
+
+
+// ==========================================
+// AFFICHER / MASQUER DEVIS
+// ==========================================
+
+function afficherMasquerDevis() {
+
+    const blocDevis =
+        document.getElementById(
+            "bloc-devis"
+        );
+
+    const boutonDevis =
+        document.getElementById(
+            "btnAfficherDevis"
+        );
+
+
+    if (!blocDevis) {
+        return;
+    }
+
+
+    if (
+        blocDevis.style.display === "none"
+    ) {
+
+        blocDevis.style.display =
+            "block";
+
+
+        if (boutonDevis) {
+
+            boutonDevis.innerHTML =
+                "📄 MASQUER LES DEVIS";
+
+        }
+
+
+        blocDevis.scrollIntoView({
+
+            behavior: "smooth",
+
+            block: "start"
+
+        });
+
+    }
+
+    else {
+
+        blocDevis.style.display =
+            "none";
+
+
+        if (boutonDevis) {
+
+            boutonDevis.innerHTML =
+                "📄 DEVIS";
+
+        }
+
+    }
+
+}
+
+
+// ==========================================
+// CHARGER DEVIS
+// ==========================================
 
 window.addEventListener(
     "DOMContentLoaded",
@@ -2864,68 +2040,921 @@ window.addEventListener(
             );
 
 
-        if (listeDevis) {
+        if (!listeDevis) {
+            return;
+        }
 
-            const devisSauvegardes =
-                localStorage.getItem(
-                    "devisExpedition"
+
+        const devisSauvegardes =
+            localStorage.getItem(
+                "devisExpedition"
+            );
+
+
+        if (
+            devisSauvegardes &&
+            devisSauvegardes.trim()
+        ) {
+
+            listeDevis.innerText =
+                devisSauvegardes;
+
+
+            const correspondances =
+                devisSauvegardes.match(
+                    /^\d+\) 📦 Nom du produit :/gm
                 );
 
 
-            if (
-                devisSauvegardes &&
-                devisSauvegardes.trim()
-            ) {
+            if (correspondances) {
 
-                listeDevis.innerText =
-                    devisSauvegardes;
-
-
-                const correspondances =
-                    devisSauvegardes.match(
-                        /^\d+\) 📦 Nom du produit :/gm
-                    );
-
-
-                if (correspondances) {
-
-                    numeroDevis =
-                        correspondances.length;
-
-                }
+                numeroDevis =
+                    correspondances.length;
 
             }
 
         }
-
-
-        // -----------------------------------------
-        // INITIALISATION TRANSPORT
-        // -----------------------------------------
-
-        mettreAJourTransport();
 
     }
 );
 
 
 // =====================================================
-// FIN DU SCRIPT
+// 📷 APERÇU CAPTURE PRODUIT
+// =====================================================
+//
+// IMPORTANT :
+// Ce bloc est volontairement présent UNE SEULE FOIS.
 // =====================================================
 
-console.log(
-    "✅ script.js chargé correctement."
-);
+const captureProduit =
+    document.getElementById(
+        "capture-produit"
+    );
 
-console.log(
-    "🔎 Recherche texte : ACTIVE"
-);
+const apercuCapture =
+    document.getElementById(
+        "apercu-capture"
+    );
 
-console.log(
-    "📷 Capture produit : ACTIVE"
-);
 
-console.log(
-    "🔬 Préparation analyse capture : ACTIVE"
-);
-```
+if (
+    captureProduit &&
+    apercuCapture
+) {
+
+    captureProduit.addEventListener(
+        "change",
+        function() {
+
+            if (
+                !this.files ||
+                !this.files[0]
+            ) {
+                return;
+            }
+
+
+            const fichier =
+                this.files[0];
+
+
+            // Vérification du type de fichier
+
+            if (
+                !fichier.type ||
+                !fichier.type.startsWith(
+                    "image/"
+                )
+            ) {
+
+                apercuCapture.innerHTML =
+                    "<p>❌ Veuillez sélectionner une image.</p>";
+
+                return;
+
+            }
+
+
+            const lecteur =
+                new FileReader();
+
+
+            lecteur.onload =
+                function(e) {
+
+                    apercuCapture.innerHTML = `
+
+<div class="cadre-apercu-capture">
+
+    <p>
+        📸 Capture sélectionnée :
+    </p>
+
+    <img
+        src="${e.target.result}"
+        alt="Aperçu de la capture du produit"
+        style="
+            max-width:100%;
+            height:auto;
+            display:block;
+            margin:10px auto;
+        "
+    >
+
+    <button
+        type="button"
+        id="supprimer-capture">
+
+        🗑️ SUPPRIMER LA CAPTURE
+
+    </button>
+
+</div>
+
+`;
+
+
+                    const boutonSupprimer =
+                        document.getElementById(
+                            "supprimer-capture"
+                        );
+
+
+                    if (
+                        boutonSupprimer
+                    ) {
+
+                        boutonSupprimer.addEventListener(
+                            "click",
+                            function() {
+
+                                captureProduit.value =
+                                    "";
+
+                                apercuCapture.innerHTML =
+                                    "";
+
+                            }
+                        );
+
+                    }
+
+                };
+
+
+            lecteur.onerror =
+                function() {
+
+                    apercuCapture.innerHTML =
+                        "<p>❌ Impossible de lire l'image.</p>";
+
+                };
+
+
+            lecteur.readAsDataURL(
+                fichier
+            );
+
+        }
+    );
+
+}
+
+
+// =====================================================
+// RECHERCHE INFORMATIONS PRODUIT
+// =====================================================
+
+const btnRechercheProduit =
+    document.getElementById(
+        "btnRechercheProduit"
+    );
+
+
+if (btnRechercheProduit) {
+
+    btnRechercheProduit.addEventListener(
+        "click",
+        async function() {
+
+            const rechercheProduit =
+                document.getElementById(
+                    "recherche-produit"
+                );
+
+
+            const sourceProduit =
+                document.getElementById(
+                    "source-produit"
+                );
+
+
+            const poidsRecherche =
+                document.getElementById(
+                    "poids-recherche"
+                );
+
+
+            const dimensionsRecherche =
+                document.getElementById(
+                    "dimensions-recherche"
+                );
+
+
+            const etatRechercheProduit =
+                document.getElementById(
+                    "etat-recherche-produit"
+                );
+
+
+            const poidsFacturableRecherche =
+                document.getElementById(
+                    "poids-facturable-recherche"
+                );
+
+
+            const produitRechercheAffiche =
+                document.getElementById(
+                    "produit-recherche-info"
+                );
+
+
+            const modeleAffiche =
+                document.getElementById(
+                    "modele-recherche-info"
+                );
+
+
+            const statutAffiche =
+                document.getElementById(
+                    "statut-recherche-info"
+                );
+
+
+            // ==========================================
+            // TEXTE DE RECHERCHE
+            // ==========================================
+
+            const texteRecherche =
+                rechercheProduit
+                    ? rechercheProduit.value.trim()
+                    : "";
+
+
+            if (
+                texteRecherche === ""
+            ) {
+
+                if (sourceProduit) {
+
+                    sourceProduit.textContent =
+                        "🌐 Source : Aucune recherche";
+
+                }
+
+
+                if (poidsRecherche) {
+
+                    poidsRecherche.textContent =
+                        "⚖️ Poids réel trouvé : Non disponible";
+
+                }
+
+
+                if (dimensionsRecherche) {
+
+                    dimensionsRecherche.textContent =
+                        "📏 Dimensions trouvées : Non disponibles";
+
+                }
+
+
+                if (poidsFacturableRecherche) {
+
+                    poidsFacturableRecherche.textContent =
+                        "💰 Poids facturable : Non calculable";
+
+                }
+
+
+                if (produitRechercheAffiche) {
+
+                    produitRechercheAffiche.textContent =
+                        "📦 Produit recherché : —";
+
+                }
+
+
+                if (modeleAffiche) {
+
+                    modeleAffiche.textContent =
+                        "🏷️ Modèle : —";
+
+                }
+
+
+                if (statutAffiche) {
+
+                    statutAffiche.textContent =
+                        "ℹ️ Statut : —";
+
+                }
+
+
+                if (etatRechercheProduit) {
+
+                    etatRechercheProduit.textContent =
+                        "⚠️ Veuillez indiquer un produit ou un lien.";
+
+                }
+
+
+                return;
+
+            }
+
+
+            // ==========================================
+            // AFFICHAGE IMMÉDIAT
+            // ==========================================
+
+            if (
+                produitRechercheAffiche
+            ) {
+
+                produitRechercheAffiche.textContent =
+                    "📦 Produit recherché : " +
+                    texteRecherche;
+
+            }
+
+
+            if (
+                etatRechercheProduit
+            ) {
+
+                etatRechercheProduit.textContent =
+                    "🔎 Recherche en cours...";
+
+            }
+
+
+            // ==========================================
+            // CONSTRUCTION URL
+            // ==========================================
+
+            const urlAPI =
+                URL_WORKER +
+                "?produit=" +
+                encodeURIComponent(
+                    texteRecherche
+                );
+
+
+            console.log(
+                "========================================"
+            );
+
+            console.log(
+                "RECHERCHE :",
+                texteRecherche
+            );
+
+            console.log(
+                "URL WORKER :",
+                urlAPI
+            );
+
+            console.log(
+                "========================================"
+            );
+
+
+            // ==========================================
+            // APPEL WORKER
+            // ==========================================
+
+            try {
+
+                const response =
+                    await fetch(
+                        urlAPI,
+                        {
+                            method: "GET",
+                            cache: "no-store"
+                        }
+                    );
+
+
+                if (
+                    !response.ok
+                ) {
+
+                    throw new Error(
+                        "Erreur HTTP " +
+                        response.status
+                    );
+
+                }
+
+
+                const donnees =
+                    await response.json();
+
+
+                console.log(
+                    "RÉPONSE WORKER :",
+                    donnees
+                );
+
+
+                if (
+                    !donnees.succes
+                ) {
+
+                    throw new Error(
+                        donnees.message ||
+                        "Erreur lors de la recherche"
+                    );
+
+                }
+
+
+                // ==========================================
+                // SOURCE
+                // ==========================================
+
+                let sourceFinale =
+                    donnees.source ||
+                    null;
+
+
+                if (
+                    !sourceFinale
+                ) {
+
+                    sourceFinale =
+                        extraireSourceDiagnostic(
+                            donnees.diagnostic
+                        );
+
+                }
+
+
+                if (
+                    sourceProduit
+                ) {
+
+                    sourceProduit.textContent =
+                        "🌐 Source : " +
+                        (
+                            sourceFinale ||
+                            "Non disponible"
+                        );
+
+                }
+
+
+                // ==========================================
+                // PRODUIT
+                // ==========================================
+
+                if (
+                    produitRechercheAffiche
+                ) {
+
+                    produitRechercheAffiche.textContent =
+                        "📦 Produit recherché : " +
+                        (
+                            donnees.produit ||
+                            texteRecherche
+                        );
+
+                }
+
+
+                // ==========================================
+                // MODÈLE
+                // ==========================================
+
+                if (
+                    modeleAffiche
+                ) {
+
+                    modeleAffiche.textContent =
+                        "🏷️ Modèle : " +
+                        (
+                            donnees.modele ||
+                            "—"
+                        );
+
+                }
+
+
+                // ==========================================
+                // POIDS
+                // ==========================================
+
+                let poidsTrouve =
+                    null;
+
+
+                if (
+                    donnees.poids_reel !== null &&
+                    donnees.poids_reel !== undefined
+                ) {
+
+                    const valeur =
+                        parseFloat(
+                            donnees.poids_reel
+                        );
+
+
+                    if (
+                        Number.isFinite(valeur) &&
+                        valeur > 0
+                    ) {
+
+                        poidsTrouve =
+                            valeur;
+
+                    }
+
+                }
+
+
+                if (
+                    poidsTrouve === null
+                ) {
+
+                    poidsTrouve =
+                        extrairePoidsDiagnostic(
+                            donnees.diagnostic
+                        );
+
+                }
+
+
+                if (
+                    poidsTrouve !== null
+                ) {
+
+                    if (
+                        poidsRecherche
+                    ) {
+
+                        poidsRecherche.textContent =
+                            "⚖️ Poids réel trouvé : " +
+                            poidsTrouve.toFixed(3) +
+                            " kg";
+
+                    }
+
+
+                    if (poids) {
+
+                        poids.value =
+                            poidsTrouve;
+
+                    }
+
+                }
+
+                else {
+
+                    if (
+                        poidsRecherche
+                    ) {
+
+                        poidsRecherche.textContent =
+                            "⚖️ Poids réel trouvé : Non disponible";
+
+                    }
+
+                }
+
+
+                // ==========================================
+                // DÉTECTION EMBALLAGE
+                // ==========================================
+
+                const typeDetecte =
+                    detecterEmballageAutomatique(
+                        texteRecherche
+                    );
+
+
+                window.typeEmballageAuto =
+                    typeDetecte;
+
+
+                // ==========================================
+                // DIMENSIONS
+                // ==========================================
+
+                let dimensionsTrouvees =
+                    false;
+
+
+                if (
+                    donnees.dimensions
+                ) {
+
+                    const h =
+                        parseFloat(
+                            donnees.dimensions.hauteur_cm
+                        );
+
+
+                    const lo =
+                        parseFloat(
+                            donnees.dimensions.longueur_cm
+                        );
+
+
+                    const la =
+                        parseFloat(
+                            donnees.dimensions.largeur_cm
+                        );
+
+
+                    if (
+                        Number.isFinite(h) &&
+                        Number.isFinite(lo) &&
+                        Number.isFinite(la) &&
+                        h > 0 &&
+                        lo > 0 &&
+                        la > 0
+                    ) {
+
+                        dimensionsTrouvees =
+                            true;
+
+
+                        if (
+                            dimensionsRecherche
+                        ) {
+
+                            dimensionsRecherche.textContent =
+                                "📏 Dimensions trouvées : " +
+                                h.toFixed(2) +
+                                " × " +
+                                lo.toFixed(2) +
+                                " × " +
+                                la.toFixed(2) +
+                                " cm";
+
+                        }
+
+
+                        if (hauteur) {
+                            hauteur.value = h;
+                        }
+
+
+                        if (longueur) {
+                            longueur.value = lo;
+                        }
+
+
+                        if (largeur) {
+                            largeur.value = la;
+                        }
+
+                    }
+
+                }
+
+
+                if (
+                    !dimensionsTrouvees &&
+                    dimensionsRecherche
+                ) {
+
+                    dimensionsRecherche.textContent =
+                        "📏 Dimensions trouvées : Non disponibles";
+
+                }
+
+
+                // ==========================================
+                // CHOIX EMBALLAGE
+                // ==========================================
+
+                let emballageFinal =
+                    "auto";
+
+
+                if (
+                    choixEmballage &&
+                    choixEmballage.value &&
+                    choixEmballage.value !== "auto"
+                ) {
+
+                    emballageFinal =
+                        choixEmballage.value;
+
+                }
+
+                else {
+
+                    emballageFinal =
+                        typeDetecte;
+
+                }
+
+
+                window.typeEmballageAuto =
+                    emballageFinal;
+
+
+                // ==========================================
+                // AFFICHER EMBALLAGE
+                // ==========================================
+
+                calculerInformationsEmballage(
+                    emballageFinal
+                );
+
+
+                // ==========================================
+                // POIDS FACTURABLE
+                // ==========================================
+
+                if (
+                    poidsTrouve !== null &&
+                    hauteur &&
+                    longueur &&
+                    largeur &&
+                    parseFloat(hauteur.value) > 0 &&
+                    parseFloat(longueur.value) > 0 &&
+                    parseFloat(largeur.value) > 0
+                ) {
+
+                    const poidsFacturable =
+                        calculerPoidsFacturable(
+                            emballageFinal
+                        );
+
+
+                    if (
+                        poidsFacturableRecherche
+                    ) {
+
+                        poidsFacturableRecherche.textContent =
+                            "💰 Poids facturable : " +
+                            poidsFacturable.toFixed(3) +
+                            " kg";
+
+                    }
+
+                }
+
+                else {
+
+                    if (
+                        poidsFacturableRecherche
+                    ) {
+
+                        poidsFacturableRecherche.textContent =
+                            "💰 Poids facturable : Non calculable";
+
+                    }
+
+                }
+
+
+                // ==========================================
+                // STATUT
+                // ==========================================
+
+                if (
+                    statutAffiche
+                ) {
+
+                    statutAffiche.textContent =
+                        "ℹ️ Statut : " +
+                        (
+                            donnees.statut ||
+                            (
+                                poidsTrouve !== null
+                                    ? "Informations trouvées"
+                                    : "Poids non trouvé"
+                            )
+                        );
+
+                }
+
+
+                // ==========================================
+                // ÉTAT FINAL
+                // ==========================================
+
+                if (
+                    etatRechercheProduit
+                ) {
+
+                    if (
+                        poidsTrouve !== null
+                    ) {
+
+                        etatRechercheProduit.textContent =
+                            "✅ Recherche effectuée pour : " +
+                            texteRecherche;
+
+                    }
+
+                    else {
+
+                        etatRechercheProduit.textContent =
+                            "⚠️ Produit trouvé, mais poids non disponible.";
+
+                    }
+
+                }
+
+
+                console.log(
+                    "POIDS FINAL UTILISÉ :",
+                    poidsTrouve
+                );
+
+
+                console.log(
+                    "EMBALLAGE FINAL :",
+                    emballageFinal
+                );
+
+
+                console.log(
+                    "SOURCE FINALE :",
+                    sourceFinale
+                );
+
+            }
+
+
+            catch (erreur) {
+
+                console.error(
+                    "Erreur recherche produit :",
+                    erreur
+                );
+
+
+                if (
+                    sourceProduit
+                ) {
+
+                    sourceProduit.textContent =
+                        "🌐 Source : Erreur";
+
+                }
+
+
+                if (
+                    poidsRecherche
+                ) {
+
+                    poidsRecherche.textContent =
+                        "⚖️ Poids réel trouvé : Non disponible";
+
+                }
+
+
+                if (
+                    dimensionsRecherche
+                ) {
+
+                    dimensionsRecherche.textContent =
+                        "📏 Dimensions trouvées : Non disponibles";
+
+                }
+
+
+                if (
+                    poidsFacturableRecherche
+                ) {
+
+                    poidsFacturableRecherche.textContent =
+                        "💰 Poids facturable : Non calculable";
+
+                }
+
+
+                if (
+                    etatRechercheProduit
+                ) {
+
+                    etatRechercheProduit.textContent =
+                        "❌ Impossible d'effectuer la recherche.";
+
+                }
+
+            }
+
+        }
+    );
+
+}
