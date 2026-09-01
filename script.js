@@ -2881,3 +2881,82 @@ if (btnRechercheProduit) {
     );
 
 }
+
+// ==========================================
+// 📷 GESTION DE LA CAPTURE PRODUIT
+// ==========================================
+
+const captureProduit =
+    document.getElementById("capture-produit");
+
+const apercuCapture =
+    document.getElementById("apercu-capture");
+
+const etatRechercheProduit =
+    document.getElementById("etat-recherche-produit");
+
+if (captureProduit) {
+
+    captureProduit.addEventListener(
+        "change",
+        function () {
+
+            const fichier =
+                this.files[0];
+
+            // Vérification
+            if (!fichier) {
+
+                return;
+
+            }
+
+            // Vérifier qu'il s'agit d'une image
+            if (
+                !fichier.type.startsWith(
+                    "image/"
+                )
+            ) {
+
+                etatRechercheProduit.innerHTML =
+                    "⚠️ Veuillez sélectionner une image.";
+
+                return;
+
+            }
+
+            // Création de l'aperçu
+            const lecteur =
+                new FileReader();
+
+            lecteur.onload =
+                function (event) {
+
+                    apercuCapture.innerHTML = `
+                        <div class="capture-preview">
+
+                            <p>
+                                📷 Capture ajoutée
+                            </p>
+
+                            <img
+                                src="${event.target.result}"
+                                alt="Capture du produit"
+                            >
+
+                        </div>
+                    `;
+
+                    etatRechercheProduit.innerHTML =
+                        "✅ Capture ajoutée avec succès.";
+
+                };
+
+            lecteur.readAsDataURL(
+                fichier
+            );
+
+        }
+    );
+
+}
