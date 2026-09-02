@@ -3455,35 +3455,8 @@ if (
 
     btnRechercheProduit.click();
 
+}           
 }
-    
-    rechercheProduit.value =
-        requeteRecherche;
-
-    console.log(
-        "🔎 REQUÊTE DE RECHERCHE IA :",
-        requeteRecherche
-    );
-
-    // =====================================================
-// 🔎 LANCER AUTOMATIQUEMENT LA RECHERCHE
-// =====================================================
-
-if (
-    requeteRecherche &&
-    btnRechercheProduit
-) {
-
-    console.log(
-        "🚀 Lancement automatique de la recherche..."
-    );
-
-    btnRechercheProduit.click();
-
-}
-    
-}
-
         }
 
         catch (erreur) {
