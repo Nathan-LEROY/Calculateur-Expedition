@@ -3361,9 +3361,13 @@ else {
             // ==========================================
 
             if (rechercheProduit) {
+
     rechercheProduit.value =
         analyse;
+
 }
+
+        }
 
         catch (erreur) {
 
