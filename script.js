@@ -3256,48 +3256,57 @@ document.addEventListener(
 
             let analyse = "";
 
+if (
+    donnees.analyse &&
+    donnees.analyse.choices &&
+    donnees.analyse.choices.length > 0 &&
+    donnees.analyse.choices[0].message &&
+    typeof donnees.analyse.choices[0].message.content ===
+        "string"
+) {
 
-            if (
-                donnees.analyse &&
-                typeof donnees.analyse.response ===
-                    "string"
-            ) {
+    analyse =
+        donnees.analyse
+            .choices[0]
+            .message
+            .content;
 
-                analyse =
-                    donnees.analyse.response;
+}
+else if (
+    donnees.analyse &&
+    typeof donnees.analyse.response ===
+        "string"
+) {
 
-            }
+    analyse =
+        donnees.analyse.response;
 
-            else if (
-                donnees.analyse &&
-                typeof donnees.analyse.result ===
-                    "string"
-            ) {
+}
+else if (
+    donnees.analyse &&
+    typeof donnees.analyse.result ===
+        "string"
+) {
 
-                analyse =
-                    donnees.analyse.result;
+    analyse =
+        donnees.analyse.result;
 
-            }
+}
+else if (
+    typeof donnees.analyse ===
+        "string"
+) {
 
-            else if (
-                typeof donnees.analyse ===
-                    "string"
-            ) {
+    analyse =
+        donnees.analyse;
 
-                analyse =
-                    donnees.analyse;
+}
+else {
 
-            }
+    analyse =
+        "";
 
-            else {
-
-                analyse =
-                    JSON.stringify(
-                        donnees.analyse
-                    );
-
-            }
-
+}
 
             analyse =
                 String(analyse || "")
