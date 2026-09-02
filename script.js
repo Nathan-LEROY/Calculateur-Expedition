@@ -2090,41 +2090,52 @@ if (captureProduit && apercuCapture) {
             const lecteur =
                 new FileReader();
 
+        lecteur.onload =
+    function (e) {
 
-            lecteur.onload =
-                function (e) {
+        apercuCapture.innerHTML = `
 
-                    apercuCapture.innerHTML = `
+            <div class="cadre-apercu-capture">
 
-                        <div class="cadre-apercu-capture">
+                <p>
+                    📸 Capture sélectionnée :
+                </p>
 
-                            <p>
-                                📸 Capture sélectionnée :
-                            </p>
+                <img
+                    id="image-capture-produit"
+                    src="${e.target.result}"
+                    alt="Capture du produit"
+                    style="
+                        max-width:100%;
+                        height:auto;
+                        display:block;
+                        margin:auto;
+                    "
+                >
 
-                            <img
-                                src="${e.target.result}"
-                                alt="Capture du produit"
-                                style="
-                                    max-width:100%;
-                                    height:auto;
-                                    display:block;
-                                    margin:auto;
-                                "
-                            >
+                <br>
 
-                            <button
-                                type="button"
-                                id="supprimer-capture">
+                <button
+                    type="button"
+                    id="analyser-capture">
 
-                                🗑️ SUPPRIMER LA CAPTURE
+                    🤖 ANALYSER LA CAPTURE
 
-                            </button>
+                </button>
 
-                        </div>
+                <br><br>
 
-                    `;
+                <button
+                    type="button"
+                    id="supprimer-capture">
 
+                    🗑️ SUPPRIMER LA CAPTURE
+
+                </button>
+
+            </div>
+
+        `;
 
                     const boutonSupprimer =
                         document.getElementById(
