@@ -3433,6 +3433,24 @@ if (rechercheProduit) {
         "🔎 REQUÊTE DE RECHERCHE IA :",
         requeteRecherche
     );
+
+    // =====================================================
+// 🔎 LANCER AUTOMATIQUEMENT LA RECHERCHE
+// =====================================================
+
+if (
+    requeteRecherche &&
+    btnRechercheProduit
+) {
+
+    console.log(
+        "🚀 Lancement automatique de la recherche..."
+    );
+
+    btnRechercheProduit.click();
+
+}
+    
 }
 
         }
