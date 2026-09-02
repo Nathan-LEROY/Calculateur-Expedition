@@ -3422,6 +3422,41 @@ if (rechercheProduit) {
     const requeteRecherche =
         informationsRecherche.join(" ");
 
+// =====================================================
+// ✂️ NETTOYAGE DE LA REQUÊTE
+// =====================================================
+
+const requeteRecherchePropre =
+    requeteRecherche
+        .replace(/\s+/g, " ")
+        .trim();
+
+rechercheProduit.value =
+    requeteRecherchePropre;
+
+console.log(
+    "🔎 REQUÊTE DE RECHERCHE IA :",
+    requeteRecherchePropre
+);
+
+
+// =====================================================
+// 🔎 LANCER AUTOMATIQUEMENT LA RECHERCHE
+// =====================================================
+
+if (
+    requeteRecherchePropre &&
+    btnRechercheProduit
+) {
+
+    console.log(
+        "🚀 Lancement automatique de la recherche..."
+    );
+
+    btnRechercheProduit.click();
+
+}
+    
     rechercheProduit.value =
         requeteRecherche;
 
