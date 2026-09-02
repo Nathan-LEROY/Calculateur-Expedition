@@ -3360,79 +3360,9 @@ else {
             //
             // ==========================================
 
-            // =====================================================
-// 🔎 CONSTRUCTION DE LA RECHERCHE À PARTIR DE L'IA
-// =====================================================
-
-if (rechercheProduit) {
-
-    const lignesAnalyse =
-        analyse.split("\n");
-
-    const informationsRecherche = [];
-
-    lignesAnalyse.forEach(function(ligne) {
-
-        const partie =
-            ligne.split(":");
-
-        if (partie.length < 2) {
-            return;
-        }
-
-        const champ =
-            partie[0]
-                .trim()
-                .toUpperCase();
-
-        const valeur =
-            partie
-                .slice(1)
-                .join(":")
-                .trim();
-
-        if (
-            !valeur ||
-            valeur === "Non identifié" ||
-            valeur === "À RECHERCHER"
-        ) {
-            return;
-        }
-
-        const champsUtiles = [
-            "TYPE_PRODUIT",
-            "MARQUE",
-            "MODELE",
-            "REFERENCE",
-            "VARIANTE",
-            "MOTIF",
-            "PERSONNAGES",
-            "COULEUR",
-            "MATIERE_APPARENTE",
-            "TEXTE_VISIBLE",
-            "DETAILS_DISTINCTIFS"
-        ];
-
-        if (
-            champsUtiles.includes(champ)
-        ) {
-            informationsRecherche.push(
-                valeur
-            );
-        }
-
-    });
-
-    const requeteRecherche =
-        informationsRecherche.join(" ");
-
+            if (rechercheProduit) {
     rechercheProduit.value =
-        requeteRecherche;
-
-    console.log(
-        "🔎 REQUÊTE DE RECHERCHE IA :",
-        requeteRecherche
-    );
+        analyse;
 }
 
         catch (erreur) {
