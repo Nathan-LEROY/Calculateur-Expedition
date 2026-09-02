@@ -2504,19 +2504,47 @@ if (btnRechercheProduit) {
 
             }
 
+// ==========================================
+// POINTURE
+// ==========================================
 
-            // ==========================================
-            // CONSTRUCTION URL
-            // ==========================================
+const champPointure =
+    document.getElementById("pointure");
 
-            const urlAPI =
-                URL_WORKER +
-                "?produit=" +
-                encodeURIComponent(
-                    texteRecherche
-                );
+const pointureRecherchee =
+    champPointure
+        ? champPointure.value.trim()
+        : "";
 
 
+// ==========================================
+// CONSTRUCTION URL WORKER
+// ==========================================
+
+let urlAPI =
+    URL_WORKER +
+    "?produit=" +
+    encodeURIComponent(
+        texteRecherche
+    );
+
+
+if (pointureRecherchee) {
+
+    urlAPI +=
+        "&pointure=" +
+        encodeURIComponent(
+            pointureRecherchee
+        );
+
+}
+
+
+console.log(
+    "POINTURE :",
+    pointureRecherchee || "Aucune"
+);
+            
             console.log(
                 "========================================"
             );
