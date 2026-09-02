@@ -3400,18 +3400,14 @@ if (rechercheProduit) {
         }
 
         const champsUtiles = [
-            "TYPE_PRODUIT",
-            "MARQUE",
-            "MODELE",
-            "REFERENCE",
-            "VARIANTE",
-            "MOTIF",
-            "PERSONNAGES",
-            "COULEUR",
-            "MATIERE_APPARENTE",
-            "TEXTE_VISIBLE",
-            "DETAILS_DISTINCTIFS"
-        ];
+    "TYPE_PRODUIT",
+    "MARQUE",
+    "MODELE",
+    "REFERENCE",
+    "MOTIF",
+    "PERSONNAGES",
+    "COULEUR"
+];
 
         if (
             champsUtiles.includes(champ)
