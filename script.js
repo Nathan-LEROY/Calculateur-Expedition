@@ -3094,3 +3094,302 @@ console.log(
     );
 
 }
+
+// =====================================================
+// 🤖 ANALYSE IA DE LA CAPTURE
+// =====================================================
+
+document.addEventListener(
+    "click",
+    async function(event) {
+
+        // Vérifier que le clic vient bien
+        // du bouton ANALYSER LA CAPTURE
+
+        if (
+            !event.target ||
+            event.target.id !== "analyser-capture"
+        ) {
+            return;
+        }
+
+
+        // ==========================================
+        // RÉCUPÉRER LES ÉLÉMENTS
+        // ==========================================
+
+        const boutonAnalyse =
+            event.target;
+
+        const imageCapture =
+            document.getElementById(
+                "image-capture-produit"
+            );
+
+        const etatRechercheProduit =
+            document.getElementById(
+                "etat-recherche-produit"
+            );
+
+        const rechercheProduit =
+            document.getElementById(
+                "recherche-produit"
+            );
+
+
+        // ==========================================
+        // VÉRIFICATION IMAGE
+        // ==========================================
+
+        if (
+            !imageCapture ||
+            !imageCapture.src
+        ) {
+
+            if (etatRechercheProduit) {
+
+                etatRechercheProduit.textContent =
+                    "⚠️ Aucune capture à analyser.";
+
+            }
+
+            return;
+        }
+
+
+        // ==========================================
+        // ÉTAT DU BOUTON
+        // ==========================================
+
+        boutonAnalyse.disabled = true;
+
+        boutonAnalyse.textContent =
+            "🤖 ANALYSE IA EN COURS...";
+
+
+        if (etatRechercheProduit) {
+
+            etatRechercheProduit.textContent =
+                "🤖 L'IA analyse visuellement le produit...";
+
+        }
+
+
+        try {
+
+            // ==========================================
+            // ENVOYER L'IMAGE AU WORKER
+            // ==========================================
+
+            const response =
+                await fetch(
+                    URL_WORKER +
+                    "analyser-image",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body:
+                            JSON.stringify({
+                                image:
+                                    imageCapture.src
+                            })
+                    }
+                );
+
+
+            // ==========================================
+            // VÉRIFIER RÉPONSE HTTP
+            // ==========================================
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Erreur HTTP " +
+                    response.status
+                );
+
+            }
+
+
+            // ==========================================
+            // RÉCUPÉRER RÉSULTAT
+            // ==========================================
+
+            const donnees =
+                await response.json();
+
+
+            console.log(
+                "========================================"
+            );
+
+            console.log(
+                "🤖 RÉSULTAT ANALYSE IA :",
+                donnees
+            );
+
+            console.log(
+                "========================================"
+            );
+
+
+            if (
+                !donnees.succes
+            ) {
+
+                throw new Error(
+                    donnees.message ||
+                    "L'analyse IA a échoué."
+                );
+
+            }
+
+
+            // ==========================================
+            // EXTRAIRE LA RÉPONSE DE L'IA
+            // ==========================================
+
+            let analyse = "";
+
+
+            if (
+                donnees.analyse &&
+                typeof donnees.analyse.response ===
+                    "string"
+            ) {
+
+                analyse =
+                    donnees.analyse.response;
+
+            }
+
+            else if (
+                donnees.analyse &&
+                typeof donnees.analyse.result ===
+                    "string"
+            ) {
+
+                analyse =
+                    donnees.analyse.result;
+
+            }
+
+            else if (
+                typeof donnees.analyse ===
+                    "string"
+            ) {
+
+                analyse =
+                    donnees.analyse;
+
+            }
+
+            else {
+
+                analyse =
+                    JSON.stringify(
+                        donnees.analyse
+                    );
+
+            }
+
+
+            analyse =
+                String(analyse || "")
+                    .trim();
+
+
+            // ==========================================
+            // AUCUNE ANALYSE
+            // ==========================================
+
+            if (!analyse) {
+
+                if (etatRechercheProduit) {
+
+                    etatRechercheProduit.textContent =
+                        "⚠️ L'IA n'a pas pu identifier le produit.";
+
+                }
+
+                return;
+            }
+
+
+            // ==========================================
+            // AFFICHER LE RÉSULTAT
+            // ==========================================
+
+            if (etatRechercheProduit) {
+
+                etatRechercheProduit.innerHTML =
+                    "🤖 <strong>Analyse IA :</strong><br>" +
+                    analyse.replace(
+                        /\n/g,
+                        "<br>"
+                    );
+
+            }
+
+
+            // ==========================================
+            // REMPLIR LA RECHERCHE
+            // ==========================================
+            //
+            // IMPORTANT :
+            // Pour cette première étape, nous affichons
+            // le résultat mais nous NE lançons PAS encore
+            // automatiquement la recherche produit.
+            //
+            // Nous allons d'abord vérifier exactement
+            // ce que l'IA retourne sur une vraie capture.
+            //
+            // ==========================================
+
+            if (rechercheProduit) {
+
+                rechercheProduit.value =
+                    analyse;
+
+            }
+
+
+        }
+
+        catch (erreur) {
+
+            console.error(
+                "❌ Erreur analyse IA :",
+                erreur
+            );
+
+
+            if (etatRechercheProduit) {
+
+                etatRechercheProduit.textContent =
+                    "❌ Impossible d'analyser la capture avec l'IA.";
+            }
+
+        }
+
+        finally {
+
+            // ==========================================
+            // RÉACTIVER LE BOUTON
+            // ==========================================
+
+            boutonAnalyse.disabled =
+                false;
+
+            boutonAnalyse.textContent =
+                "🤖 ANALYSER LA CAPTURE";
+
+        }
+
+    }
+);
