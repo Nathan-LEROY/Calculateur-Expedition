@@ -3392,12 +3392,15 @@ if (rechercheProduit) {
                 .trim();
 
         if (
-            !valeur ||
-            valeur === "Non identifié" ||
-            valeur === "À RECHERCHER"
-        ) {
-            return;
-        }
+    !valeur ||
+    valeur === "Non identifié" ||
+    valeur === "Non identifiée" ||
+    valeur === "Aucun" ||
+    valeur === "Aucune" ||
+    valeur === "À RECHERCHER"
+) {
+    return;
+}
 
         const champsUtiles = [
     "TYPE_PRODUIT",
