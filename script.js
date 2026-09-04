@@ -3551,9 +3551,76 @@ function extraireChampIA(texte, nomChamp) {
         : "";
 }
 
-
-const poidsIA =
+           const poidsIA =
     extraireChampIA(analyse, "POIDS");
+
+
+// ======================================================
+// ⚖️ NORMALISATION DU POIDS IA
+// ======================================================
+
+function normaliserPoidsIAFrontend(valeur) {
+
+    if (
+        valeur === null ||
+        valeur === undefined
+    ) {
+        return null;
+    }
+
+    let texte =
+        String(valeur)
+            .trim()
+            .toLowerCase()
+            .replace(",", ".");
+
+    if (
+        !texte ||
+        texte === "inconnu"
+    ) {
+        return null;
+    }
+
+    const nombre =
+        parseFloat(
+            texte.replace(/[^\d.-]/g, "")
+        );
+
+    if (
+        !Number.isFinite(nombre) ||
+        nombre <= 0
+    ) {
+        return null;
+    }
+
+    // Si Gemma précise les grammes
+    if (
+        texte.includes("g") &&
+        !texte.includes("kg")
+    ) {
+        return nombre / 1000;
+    }
+
+    // Si Gemma renvoie une valeur
+    // manifestement trop grande pour un produit
+    if (nombre > 50) {
+
+        // Exemple :
+        // 700 = 700 g = 0,700 kg
+        // 800 = 800 g = 0,800 kg
+
+        if (
+            nombre >= 100 &&
+            nombre <= 10000
+        ) {
+            return nombre / 1000;
+        }
+
+        return null;
+    }
+
+    return nombre;
+} 
 
 const poidsTypeIA =
     extraireChampIA(analyse, "POIDS_TYPE")
@@ -3609,11 +3676,9 @@ const dimensionsConfianceIA =
 window.estimationIA = {
 
     poids:
-        Number.isFinite(
-            parseFloat(poidsIA)
-        )
-            ? parseFloat(poidsIA)
-            : null,
+    normaliserPoidsIAFrontend(
+        poidsIA
+    ),
 
     poidsType:
         poidsTypeIA || "INCONNU",
