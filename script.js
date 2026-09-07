@@ -2695,188 +2695,87 @@ console.log(
                 }
 
                 // ==========================================
-// POIDS
-// ==========================================
+                // POIDS
+                // ==========================================
 
-let poidsTrouve =
-    null;
-
-let originePoids =
-    "aucune";
+                let poidsTrouve =
+                    null;
 
 
-// ==========================================
-// 🌐 POIDS INTERNET
-// ==========================================
+                if (
+                    donnees.poids_reel !== null &&
+                    donnees.poids_reel !== undefined
+                ) {
 
-if (
-    donnees.poids_reel !== null &&
-    donnees.poids_reel !== undefined
-) {
-
-    const valeur =
-        parseFloat(
-            String(
-                donnees.poids_reel
-            ).replace(",", ".")
-        );
+                    const valeur =
+                        parseFloat(
+                            donnees.poids_reel
+                        );
 
 
-    if (
-        Number.isFinite(valeur) &&
-        valeur > 0
-    ) {
+                    if (
+                        Number.isFinite(valeur) &&
+                        valeur > 0
+                    ) {
 
-        poidsTrouve =
-            valeur;
+                        poidsTrouve =
+                            valeur;
 
-        originePoids =
-            "internet";
+                    }
 
-    }
-
-}
+                }
 
 
-// ==========================================
-// 🔎 DIAGNOSTIC INTERNET
-// ==========================================
+                if (
+                    poidsTrouve === null
+                ) {
 
-if (
-    poidsTrouve === null
-) {
+                    poidsTrouve =
+                        extrairePoidsDiagnostic(
+                            donnees.diagnostic
+                        );
 
-    const poidsDiagnostic =
-        extrairePoidsDiagnostic(
-            donnees.diagnostic
-        );
+                }
 
 
-    if (
-        poidsDiagnostic !== null &&
-        Number.isFinite(
-            poidsDiagnostic
-        ) &&
-        poidsDiagnostic > 0
-    ) {
+                if (
+                    poidsTrouve !== null
+                ) {
 
-        poidsTrouve =
-            poidsDiagnostic;
+                    if (
+                        poidsRecherche
+                    ) {
 
-        originePoids =
-            "internet";
+                        poidsRecherche.textContent =
+                            "⚖️ Poids réel trouvé : " +
+                            poidsTrouve.toFixed(3) +
+                            " kg";
 
-    }
-
-}
+                    }
 
 
-// ==========================================
-// 🤖 ESTIMATION IA
-// ==========================================
+                    if (poids) {
 
-if (
-    poidsTrouve === null &&
-    window.estimationIA &&
-    window.estimationIA.poids !== null &&
-    window.estimationIA.poidsType === "ESTIME"
-) {
+                        poids.value =
+                            poidsTrouve;
 
-    const poidsEstimeIA =
-        parseFloat(
-            String(
-                window.estimationIA.poids
-            ).replace(",", ".")
-        );
+                    }
 
+                }
 
-    if (
-        Number.isFinite(
-            poidsEstimeIA
-        ) &&
-        poidsEstimeIA > 0
-    ) {
+                else {
 
-        poidsTrouve =
-            poidsEstimeIA;
+                    if (
+                        poidsRecherche
+                    ) {
 
-        originePoids =
-            "ia_estime";
+                        poidsRecherche.textContent =
+                            "⚖️ Poids réel trouvé : Non disponible";
 
-    }
+                    }
 
-}
+                }
 
-
-// ==========================================
-// 📊 AFFICHAGE DU POIDS
-// ==========================================
-
-if (
-    poidsTrouve !== null
-) {
-
-    if (
-        poidsRecherche
-    ) {
-
-        if (
-            originePoids === "internet"
-        ) {
-
-            poidsRecherche.textContent =
-                "⚖️ Poids réel trouvé : " +
-                poidsTrouve.toFixed(3) +
-                " kg";
-
-        }
-
-        else if (
-            originePoids === "ia_estime"
-        ) {
-
-            const confiance =
-                window.estimationIA &&
-                window.estimationIA.poidsConfiance
-                    ? window.estimationIA.poidsConfiance
-                    : "faible";
-
-
-            poidsRecherche.textContent =
-                "🤖 Poids estimé par IA : " +
-                poidsTrouve.toFixed(3) +
-                " kg" +
-                " — confiance " +
-                confiance;
-
-        }
-
-    }
-
-
-    if (
-        poids
-    ) {
-
-        poids.value =
-            poidsTrouve;
-
-    }
-
-}
-
-else {
-
-    if (
-        poidsRecherche
-    ) {
-
-        poidsRecherche.textContent =
-            "⚖️ Poids : Non disponible";
-
-    }
-
-}
 
                 // ==========================================
                 // DÉTECTION EMBALLAGE
@@ -2891,204 +2790,91 @@ else {
                 window.typeEmballageAuto =
                     typeDetecte;
 
+
                 // ==========================================
-// DIMENSIONS
-// ==========================================
+                // DIMENSIONS
+                // ==========================================
 
-let dimensionsTrouvees =
-    false;
-
-let origineDimensions =
-    "aucune";
+                let dimensionsTrouvees =
+                    false;
 
 
-// ==========================================
-// 🌐 DIMENSIONS INTERNET
-// ==========================================
+                if (
+                    donnees.dimensions
+                ) {
 
-if (
-    donnees.dimensions
-) {
+                    const h =
+                        parseFloat(
+                            donnees.dimensions.hauteur_cm
+                        );
 
-    const h =
-        parseFloat(
-            String(
-                donnees.dimensions.hauteur_cm
-            ).replace(",", ".")
-        );
+                    const lo =
+                        parseFloat(
+                            donnees.dimensions.longueur_cm
+                        );
 
-    const lo =
-        parseFloat(
-            String(
-                donnees.dimensions.longueur_cm
-            ).replace(",", ".")
-        );
-
-    const la =
-        parseFloat(
-            String(
-                donnees.dimensions.largeur_cm
-            ).replace(",", ".")
-        );
+                    const la =
+                        parseFloat(
+                            donnees.dimensions.largeur_cm
+                        );
 
 
-    if (
-        Number.isFinite(h) &&
-        Number.isFinite(lo) &&
-        Number.isFinite(la) &&
-        h > 0 &&
-        lo > 0 &&
-        la > 0
-    ) {
+                    if (
+                        Number.isFinite(h) &&
+                        Number.isFinite(lo) &&
+                        Number.isFinite(la) &&
+                        h > 0 &&
+                        lo > 0 &&
+                        la > 0
+                    ) {
 
-        dimensionsTrouvees =
-            true;
-
-        origineDimensions =
-            "internet";
+                        dimensionsTrouvees =
+                            true;
 
 
-        if (
-            dimensionsRecherche
-        ) {
+                        if (
+                            dimensionsRecherche
+                        ) {
 
-            dimensionsRecherche.textContent =
-                "📏 Dimensions réelles trouvées : " +
-                h.toFixed(2) +
-                " × " +
-                lo.toFixed(2) +
-                " × " +
-                la.toFixed(2) +
-                " cm";
+                            dimensionsRecherche.textContent =
+                                "📏 Dimensions trouvées : " +
+                                h.toFixed(2) +
+                                " × " +
+                                lo.toFixed(2) +
+                                " × " +
+                                la.toFixed(2) +
+                                " cm";
 
-        }
-
-
-        if (hauteur) {
-            hauteur.value =
-                h;
-        }
-
-        if (longueur) {
-            longueur.value =
-                lo;
-        }
-
-        if (largeur) {
-            largeur.value =
-                la;
-        }
-
-    }
-
-}
+                        }
 
 
-// ==========================================
-// 🤖 DIMENSIONS ESTIMÉES PAR IA
-// ==========================================
+                        if (hauteur) {
+                            hauteur.value = h;
+                        }
 
-if (
-    !dimensionsTrouvees &&
-    window.estimationIA &&
-    window.estimationIA.dimensions &&
-    window.estimationIA.dimensionsType === "ESTIME"
-) {
+                        if (longueur) {
+                            longueur.value = lo;
+                        }
 
-    const hIA =
-        parseFloat(
-            String(
-                window.estimationIA.dimensions.hauteur_cm
-            ).replace(",", ".")
-        );
+                        if (largeur) {
+                            largeur.value = la;
+                        }
 
-    const loIA =
-        parseFloat(
-            String(
-                window.estimationIA.dimensions.longueur_cm
-            ).replace(",", ".")
-        );
+                    }
 
-    const laIA =
-        parseFloat(
-            String(
-                window.estimationIA.dimensions.largeur_cm
-            ).replace(",", ".")
-        );
+                }
 
 
-    if (
-        Number.isFinite(hIA) &&
-        Number.isFinite(loIA) &&
-        Number.isFinite(laIA) &&
-        hIA > 0 &&
-        loIA > 0 &&
-        laIA > 0
-    ) {
+                if (
+                    !dimensionsTrouvees &&
+                    dimensionsRecherche
+                ) {
 
-        dimensionsTrouvees =
-            true;
+                    dimensionsRecherche.textContent =
+                        "📏 Dimensions trouvées : Non disponibles";
 
-        origineDimensions =
-            "ia_estime";
+                }
 
-
-        const confiance =
-            window.estimationIA.dimensionsConfiance ||
-            "faible";
-
-
-        if (
-            dimensionsRecherche
-        ) {
-
-            dimensionsRecherche.textContent =
-                "🤖 Dimensions estimées par IA : " +
-                hIA.toFixed(2) +
-                " × " +
-                loIA.toFixed(2) +
-                " × " +
-                laIA.toFixed(2) +
-                " cm" +
-                " — confiance " +
-                confiance;
-
-        }
-
-
-        if (hauteur) {
-            hauteur.value =
-                hIA;
-        }
-
-        if (longueur) {
-            longueur.value =
-                loIA;
-        }
-
-        if (largeur) {
-            largeur.value =
-                laIA;
-        }
-
-    }
-
-}
-
-
-// ==========================================
-// ❌ AUCUNE DIMENSION
-// ==========================================
-
-if (
-    !dimensionsTrouvees &&
-    dimensionsRecherche
-) {
-
-    dimensionsRecherche.textContent =
-        "📏 Dimensions : Non disponibles";
-
-}
 
                 // ==========================================
                 // CHOIX EMBALLAGE
@@ -3523,212 +3309,17 @@ else {
 }
 
             analyse =
-    String(analyse || "")
-        .trim();
+                String(analyse || "")
+                    .trim();
 
 
-// ======================================================
-// 📦 RÉCUPÉRATION DES ESTIMATIONS IA
-// ======================================================
+            // ==========================================
+            // AUCUNE ANALYSE
+            // ==========================================
 
-function extraireChampIA(texte, nomChamp) {
+            if (!analyse) {
 
-    const nomEchappe =
-        nomChamp.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-
-    const regex =
-        new RegExp(
-            "^" +
-            nomEchappe +
-            "\\s*:\\s*(.*)$",
-            "im"
-        );
-
-    const match = texte.match(regex);
-
-    return match
-        ? match[1].trim()
-        : "";
-}
-
-           const poidsIA =
-    extraireChampIA(analyse, "POIDS");
-
-
-// ======================================================
-// ⚖️ NORMALISATION DU POIDS IA
-// ======================================================
-
-function normaliserPoidsIAFrontend(valeur) {
-
-    if (
-        valeur === null ||
-        valeur === undefined
-    ) {
-        return null;
-    }
-
-    let texte =
-        String(valeur)
-            .trim()
-            .toLowerCase()
-            .replace(",", ".");
-
-    if (
-        !texte ||
-        texte === "inconnu"
-    ) {
-        return null;
-    }
-
-    const nombre =
-        parseFloat(
-            texte.replace(/[^\d.-]/g, "")
-        );
-
-    if (
-        !Number.isFinite(nombre) ||
-        nombre <= 0
-    ) {
-        return null;
-    }
-
-    // Si Gemma précise les grammes
-    if (
-        texte.includes("g") &&
-        !texte.includes("kg")
-    ) {
-        return nombre / 1000;
-    }
-
-    // Si Gemma renvoie une valeur
-    // manifestement trop grande pour un produit
-    if (nombre > 50) {
-
-        // Exemple :
-        // 700 = 700 g = 0,700 kg
-        // 800 = 800 g = 0,800 kg
-
-        if (
-            nombre >= 100 &&
-            nombre <= 10000
-        ) {
-            return nombre / 1000;
-        }
-
-        return null;
-    }
-
-    return nombre;
-} 
-
-const poidsTypeIA =
-    extraireChampIA(analyse, "POIDS_TYPE")
-        .toUpperCase();
-
-const poidsConfianceIA =
-    extraireChampIA(analyse, "POIDS_CONFIANCE");
-
-
-const longueurIA =
-    parseFloat(
-        extraireChampIA(
-            analyse,
-            "LONGUEUR_CM"
-        )
-    );
-
-const largeurIA =
-    parseFloat(
-        extraireChampIA(
-            analyse,
-            "LARGEUR_CM"
-        )
-    );
-
-const hauteurIA =
-    parseFloat(
-        extraireChampIA(
-            analyse,
-            "HAUTEUR_CM"
-        )
-    );
-
-
-const dimensionsTypeIA =
-    extraireChampIA(
-        analyse,
-        "DIMENSIONS_TYPE"
-    ).toUpperCase();
-
-
-const dimensionsConfianceIA =
-    extraireChampIA(
-        analyse,
-        "DIMENSIONS_CONFIANCE"
-    );
-
-
-// ======================================================
-// 💾 STOCKAGE DES DONNÉES IA
-// ======================================================
-
-window.estimationIA = {
-
-    poids:
-    normaliserPoidsIAFrontend(
-        poidsIA
-    ),
-
-    poidsType:
-        poidsTypeIA || "INCONNU",
-
-    poidsConfiance:
-        poidsConfianceIA || "faible",
-
-    dimensions: {
-
-        longueur_cm:
-            Number.isFinite(longueurIA)
-                ? longueurIA
-                : null,
-
-        largeur_cm:
-            Number.isFinite(largeurIA)
-                ? largeurIA
-                : null,
-
-        hauteur_cm:
-            Number.isFinite(hauteurIA)
-                ? hauteurIA
-                : null
-    },
-
-    dimensionsType:
-        dimensionsTypeIA || "INCONNU",
-
-    dimensionsConfiance:
-        dimensionsConfianceIA || "faible"
-};
-
-
-// ======================================================
-// 🧪 DIAGNOSTIC
-// ======================================================
-
-console.log(
-    "🤖 DONNÉES IA :",
-    window.estimationIA
-);
-
-
-// ==========================================
-// AUCUNE ANALYSE
-// ==========================================
-
-if (!analyse) {
-
-    if (etatRechercheProduit) {
+                if (etatRechercheProduit) {
 
                     etatRechercheProduit.textContent =
                         "⚠️ L'IA n'a pas pu identifier le produit.";
@@ -3898,6 +3489,7 @@ if (
 
             boutonAnalyse.textContent =
                 "🤖 ANALYSER LA CAPTURE";
+
         }
 
     }
