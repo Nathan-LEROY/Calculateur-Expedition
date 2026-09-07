@@ -3898,7 +3898,6 @@ if (
 
             boutonAnalyse.textContent =
                 "🤖 ANALYSER LA CAPTURE";
-
         }
 
     }
