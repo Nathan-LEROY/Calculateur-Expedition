@@ -3755,6 +3755,12 @@ const dimensionsConfianceIA =
 
 window.estimationIA = {
 
+    type_produit:
+    extraireChampIA(
+        analyse,
+        "TYPE_PRODUIT"
+    ),
+
     poids:
     normaliserPoidsIAFrontend(
         poidsIA
