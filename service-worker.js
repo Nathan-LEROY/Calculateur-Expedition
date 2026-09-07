@@ -1,4 +1,4 @@
-const CACHE_NAME = "calculateur-expedition-v2";
+const CACHE_NAME = "calculateur-expedition-v3";
 
 const FICHIERS = [
     "./",
