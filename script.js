@@ -2983,7 +2983,6 @@ if (
 
 }
 
-
 // ==========================================
 // 🤖 DIMENSIONS ESTIMÉES PAR IA
 // ==========================================
@@ -3017,14 +3016,80 @@ if (
         );
 
 
-    if (
+    // ==========================================
+    // 🛡️ CONTRÔLE DE COHÉRENCE DES DIMENSIONS IA
+    // ==========================================
+
+    let dimensionsIAValides =
         Number.isFinite(hIA) &&
         Number.isFinite(loIA) &&
         Number.isFinite(laIA) &&
         hIA > 0 &&
         loIA > 0 &&
-        laIA > 0
+        laIA > 0;
+
+
+    // Une dimension individuelle supérieure à 100 cm
+    // est considérée comme suspecte pour une estimation
+    // automatique d'un produit destiné à l'expédition.
+    if (
+        hIA > 100 ||
+        loIA > 100 ||
+        laIA > 100
     ) {
+
+        dimensionsIAValides = false;
+
+    }
+
+
+    // ==========================================
+    // 🧥 PROTECTION CONTRE LES MESURES DE VÊTEMENT
+    // ==========================================
+
+    const typeProduitIA =
+        String(
+            window.estimationIA.type_produit || ""
+        ).toLowerCase();
+
+
+    const produitVetement =
+        typeProduitIA.includes("veste") ||
+        typeProduitIA.includes("manteau") ||
+        typeProduitIA.includes("blouson") ||
+        typeProduitIA.includes("pull") ||
+        typeProduitIA.includes("sweat") ||
+        typeProduitIA.includes("chemise") ||
+        typeProduitIA.includes("t-shirt") ||
+        typeProduitIA.includes("tee-shirt") ||
+        typeProduitIA.includes("pantalon") ||
+        typeProduitIA.includes("jean") ||
+        typeProduitIA.includes("short") ||
+        typeProduitIA.includes("jupe") ||
+        typeProduitIA.includes("robe");
+
+
+    // Pour un vêtement, une largeur ou une longueur
+    // trop importante indique probablement une mesure
+    // de confection plutôt qu'un encombrement plié.
+    if (
+        produitVetement &&
+        (
+            loIA > 60 ||
+            laIA > 60
+        )
+    ) {
+
+        dimensionsIAValides = false;
+
+    }
+
+
+    // ==========================================
+    // 📦 ACCEPTATION DES DIMENSIONS IA
+    // ==========================================
+
+    if (dimensionsIAValides) {
 
         dimensionsTrouvees =
             true;
@@ -3072,9 +3137,24 @@ if (
         }
 
     }
+    else {
+
+        // Dimensions IA jugées incohérentes :
+        // on ne les utilise PAS pour le calcul.
+
+        console.warn(
+            "⚠️ Dimensions IA refusées :",
+            {
+                hauteur: hIA,
+                longueur: loIA,
+                largeur: laIA,
+                typeProduit: typeProduitIA
+            }
+        );
+
+    }
 
 }
-
 
 // ==========================================
 // ❌ AUCUNE DIMENSION
