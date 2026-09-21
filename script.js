@@ -311,7 +311,16 @@ function calculerPoidsFacturable(
     const poidsProduit =
         parseFloat(poids?.value) || 0;
 
+console.log(
+    "EMBALLAGE REÇU :",
+    typeEmballage
+);
 
+console.log(
+    "POIDS PRODUIT :",
+    poidsProduit
+);
+    
     const poidsEmballage =
         obtenirPoidsEmballage(
             typeEmballage
