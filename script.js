@@ -2872,7 +2872,16 @@ if (
 
     }
 
+console.log(
+    "🔴 POIDS TROUVÉ AVANT REMPLISSAGE :",
+    poidsTrouve
+);
 
+console.log(
+    "🔴 ORIGINE DU POIDS :",
+    originePoids
+);
+    
     if (
         poids
     ) {
