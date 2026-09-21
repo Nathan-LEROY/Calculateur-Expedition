@@ -994,13 +994,13 @@ function calculerAvion(
         parseFloat(
             poids?.value
         ) || 0;
-
-
-    const typeEmballageAuto =
-        window.typeEmballageAuto ||
-        "carton";
-
-
+    
+const typeEmballageAuto =
+    window.typeEmballageAuto !== undefined &&
+    window.typeEmballageAuto !== null
+        ? window.typeEmballageAuto
+        : "carton";
+    
     const poidsEmballage =
         obtenirPoidsEmballage(
             typeEmballageAuto
