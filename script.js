@@ -249,8 +249,11 @@ function obtenirPoidsEmballage(
         case "carton":
             return 0.150;
 
-        case "grand-carton":
+                case "grand-carton":
             return 0.300;
+
+        case "":
+            return 0;
 
         default:
             return 0.150;
@@ -284,8 +287,11 @@ function obtenirMargeEmballage(
         case "carton":
             return 3;
 
-        case "grand-carton":
+                case "grand-carton":
             return 5;
+
+        case "":
+            return 0;
 
         default:
             return 3;
