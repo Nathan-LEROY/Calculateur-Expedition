@@ -191,8 +191,12 @@ function calculerPoidsVolumetrique(
             marge = 3;
             break;
 
-        case "grand-carton":
+                case "grand-carton":
             marge = 5;
+            break;
+
+        case "":
+            marge = 0;
             break;
 
         default:
