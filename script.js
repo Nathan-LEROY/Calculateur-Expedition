@@ -2882,14 +2882,11 @@ console.log(
     originePoids
 );
     
-    if (
-        poids
-    ) {
+    if (poids) {
+    poids.value = poidsTrouve;
 
-        poids.value =
-            poidsTrouve;
-
-    }
+    console.log("🟢 POIDS MIS DANS LE CHAMP :", poids.value);
+}
 
 }
 
