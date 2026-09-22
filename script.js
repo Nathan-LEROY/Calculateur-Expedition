@@ -3119,32 +3119,31 @@ if (
                 // CHOIX EMBALLAGE
                 // ==========================================
 
-                let emballageFinal =
-                    "auto";
+                let emballageFinal = "auto";
 
+if (choixEmballage) {
 
-                if (
-                    choixEmballage &&
-                    choixEmballage.value &&
-                    choixEmballage.value !== "auto"
-                ) {
+    // Champ vide = aucun emballage
+    if (choixEmballage.value === "") {
+        emballageFinal = "";
+    }
 
-                    emballageFinal =
-                        choixEmballage.value;
+    // Choix manuel d'un emballage
+    else if (choixEmballage.value !== "auto") {
+        emballageFinal = choixEmballage.value;
+    }
 
-                }
+    // Automatique = emballage détecté par la recherche
+    else {
+        emballageFinal = typeDetecte;
+    }
 
-                else {
+} else {
+    emballageFinal = typeDetecte;
+}
 
-                    emballageFinal =
-                        typeDetecte;
-
-                }
-
-
-                window.typeEmballageAuto =
-                    emballageFinal;
-
+window.typeEmballageAuto =
+    emballageFinal;
 
                 // ==========================================
                 // AFFICHER EMBALLAGE
