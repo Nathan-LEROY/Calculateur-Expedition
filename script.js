@@ -3089,22 +3089,6 @@ if (
 
         }
 
-
-        if (hauteur) {
-            hauteur.value =
-                hIA;
-        }
-
-        if (longueur) {
-            longueur.value =
-                loIA;
-        }
-
-        if (largeur) {
-            largeur.value =
-                laIA;
-        }
-
     }
 
 }
