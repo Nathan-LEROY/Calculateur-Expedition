@@ -3071,23 +3071,64 @@ if (
             window.estimationIA.dimensionsConfiance ||
             "faible";
 
+       if (
+    dimensionsRecherche
+) {
 
-        if (
-            dimensionsRecherche
-        ) {
+    dimensionsRecherche.innerHTML =
+        "🤖 Dimensions estimées par IA : " +
+        hIA.toFixed(2) +
+        " × " +
+        loIA.toFixed(2) +
+        " × " +
+        laIA.toFixed(2) +
+        " cm" +
+        " — confiance " +
+        confiance +
+        "<br><br>" +
+        "<button type=\"button\" id=\"btnUtiliserDimensionsIA\">" +
+        "📐 UTILISER LES DIMENSIONS SUGGÉRÉES" +
+        "</button>";
 
-            dimensionsRecherche.textContent =
-                "🤖 Dimensions estimées par IA : " +
-                hIA.toFixed(2) +
-                " × " +
-                loIA.toFixed(2) +
-                " × " +
-                laIA.toFixed(2) +
-                " cm" +
-                " — confiance " +
-                confiance;
+const btnUtiliserDimensionsIA =
+    document.getElementById(
+        "btnUtiliserDimensionsIA"
+    );
+
+if (btnUtiliserDimensionsIA) {
+
+    btnUtiliserDimensionsIA.addEventListener(
+        "click",
+        function () {
+
+            if (hauteur) {
+                hauteur.value = hIA;
+            }
+
+            if (longueur) {
+                longueur.value = loIA;
+            }
+
+            if (largeur) {
+                largeur.value = laIA;
+            }
+
+            origineDimensions =
+                "ia_estime";
+
+            console.log(
+                "DIMENSIONS IA UTILISÉES PAR L'UTILISATEUR :",
+                hIA,
+                loIA,
+                laIA
+            );
 
         }
+    );
+
+}
+           
+}
 
     }
 
