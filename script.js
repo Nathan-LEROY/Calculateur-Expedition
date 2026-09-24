@@ -1451,6 +1451,15 @@ if (choixEmballage) {
             let emballageChoisi =
                 choixEmballage.value;
 
+            console.log(
+    "🔎 CHANGEMENT SELECT EMBALLAGE :",
+    choixEmballage.value
+);
+
+console.log(
+    "🔎 TYPE AUTO ACTUEL :",
+    window.typeEmballageAuto
+);
 
             if (
                 emballageChoisi === "auto"
